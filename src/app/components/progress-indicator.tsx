@@ -15,11 +15,18 @@ export function ProgressIndicator({ sections }: ProgressIndicatorProps) {
       const documentHeight = document.documentElement.scrollHeight;
       const scrollTop = window.scrollY;
       const scrollPercentage = scrollTop / (documentHeight - windowHeight);
-      const sectionIndex = Math.min(Math.floor(scrollPercentage * sections.length), sections.length - 1);
+      
+      const sectionIndex = Math.min(
+        Math.floor(scrollPercentage * sections.length),
+        sections.length - 1
+      );
+      
       setActiveSection(sectionIndex);
     };
+
     window.addEventListener('scroll', updateActiveSection);
     updateActiveSection();
+    
     return () => window.removeEventListener('scroll', updateActiveSection);
   }, [sections.length]);
 
@@ -35,9 +42,11 @@ export function ProgressIndicator({ sections }: ProgressIndicatorProps) {
             }}
             className="group relative flex items-center justify-end"
           >
+            {/* Section Label - appears on hover */}
             <motion.span
               initial={{ opacity: 0, x: 10 }}
               whileHover={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.2 }}
               className="absolute right-10 px-3 py-1.5 rounded-lg whitespace-nowrap pointer-events-none"
               style={{
                 fontFamily: "'Inter', sans-serif",
@@ -50,12 +59,35 @@ export function ProgressIndicator({ sections }: ProgressIndicatorProps) {
             >
               {section}
             </motion.span>
-            <div className={`w-2 h-2 rounded-full transition-all duration-300 ${activeSection === index ? 'scale-150' : 'scale-100 opacity-40'}`} style={{ backgroundColor: activeSection === index ? '#0E4E68' : '#2F3B40' }} />
+
+            {/* Dot Indicator */}
+            <div
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                activeSection === index ? 'scale-150' : 'scale-100 opacity-40'
+              }`}
+              style={{
+                backgroundColor: activeSection === index ? '#0E4E68' : '#2F3B40',
+              }}
+            />
           </button>
         ))}
       </div>
-      <motion.div className="absolute -left-1 top-0 w-0.5 rounded-full" style={{ height: '100%', backgroundColor: 'rgba(14, 78, 104, 0.1)' }}>
-        <motion.div style={{ scaleY: scrollYProgress, backgroundColor: '#0E4E68' }} className="w-full rounded-full origin-top" />
+
+      {/* Progress Bar */}
+      <motion.div
+        className="absolute -left-1 top-0 w-0.5 rounded-full"
+        style={{
+          height: '100%',
+          backgroundColor: 'rgba(14, 78, 104, 0.1)',
+        }}
+      >
+        <motion.div
+          style={{
+            scaleY: scrollYProgress,
+            backgroundColor: '#0E4E68',
+          }}
+          className="w-full rounded-full origin-top"
+        />
       </motion.div>
     </div>
   );

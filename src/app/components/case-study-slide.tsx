@@ -20,7 +20,13 @@ export function Slide({ id, children, className = '' }: SlideProps) {
   );
 }
 
-export function AnimatedText({ children, className = '' }: { children: ReactNode; className?: string }) {
+interface AnimatedTextProps {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}
+
+export function AnimatedText({ children, className = '' }: AnimatedTextProps) {
   return (
     <div className="overflow-hidden">
       <motion.div className={className}>
@@ -30,7 +36,13 @@ export function AnimatedText({ children, className = '' }: { children: ReactNode
   );
 }
 
-export function GlassCard({ children, className = '' }: { children: ReactNode; className?: string }) {
+interface GlassCardProps {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}
+
+export function GlassCard({ children, className = '' }: GlassCardProps) {
   return (
     <motion.div
       className={`rounded-[3rem] backdrop-blur-md ${className}`}
