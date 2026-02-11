@@ -1,0 +1,31 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  --background: #FBF8F1;
+  --foreground: #2F3B40;
+  --card: #ffffff;
+  --card-foreground: #2F3B40;
+  --popover: #ffffff;
+  --popover-foreground: #2F3B40;
+  --primary: #0E4E68;
+  --primary-foreground: #ffffff;
+  --secondary: #1A8E9F;
+  --secondary-foreground: #ffffff;
+  --muted: #F3F3F5;
+  --muted-foreground: #717182;
+  --accent: #D8614E;
+  --accent-foreground: #ffffff;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(14, 78, 104, 0.1);
+  --input: transparent;
+  --input-background: #f3f3f5;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #0E4E68;
+  --radius: 1rem;
+}
+
+// ... (rest of the file remains as previously read)
