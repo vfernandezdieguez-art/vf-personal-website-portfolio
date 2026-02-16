@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import * as LucideIcons from "lucide-react";
 import { 
   motion, AnimatePresence, 
   Pill, Heading, BodyText, IconButton, StatItem, ArtifactCard, 
@@ -18,45 +19,302 @@ import maturityScales from 'figma:asset/1684521193bcc9d1dac5e3348a4b96f4098fbac5
 import effortModel from 'figma:asset/a227bff4af1daa63b9939c4bdc5ec6ae409eebc6.png';
 
 // --- DATA ---
-const slides = [
-  { id: 'cover', title: 'Experience Center of Excellence', subtitle: 'Transforming organizational design into measurable customer experience impact.', category: 'GRUP Petersen', sidebarLabel: 'COVER', metadata: 'Head of Customer Experience', year: '2023 — 2025' },
-  { id: 'context', title: 'A fragmented landscape with shared interfaces', category: '01 / CONTEXT', sidebarLabel: 'CONTEXT', content: 'In 2022, UX existed as a small, execution-focused UI team. Across four banks, there were four designers, working mainly on digital interfaces.\n\nProduct definitions and interfaces were partially unified, but service models and technology stacks were still different.' },
-  { id: 'challenge', title: 'Evolving at the speed of change', category: '02 / THE CHALLENGE', sidebarLabel: 'CHALLENGE', contextPoints: ['DECENTRALIZING BACKLOGS', 'BUILDING AUTONOMY', 'FUSING BUSINESS & TECH'], introText: 'To meet the group’s expansion needs, I led a collaborative process with UX leadership to design a new operational discipline.', missionBullets: [{ icon: 'Share2', label: 'MULTI-BANK', text: 'Operate across 4 bank realities.' }, { icon: 'Zap', label: 'AUTONOMY', text: 'Support product teams.' }, { icon: 'Target', label: 'ALIGNMENT', text: 'Business priorities first.' }, { icon: 'Layers', label: 'SYSTEMIC', text: 'Scale without friction.' }] },
-  { id: 'role', title: 'Architecting the System', category: '03 / MY ROLE', sidebarLabel: 'MY ROLE', roleIntro: 'I led the creation and scaling of a Customer Experience Center of Excellence, with responsibility for CX Strategy, Organizational Design, and Talent Development.', roleBullets: [{ label: 'STRATEGY', title: 'CX Strategy & Governance', text: 'Establishing the North Star for all group banks.' }, { label: 'DESIGN', title: 'Organizational Design', text: 'Defining the matrix model and operating discipline.' }, { label: 'CAPABILITY', title: 'Talent Development', text: 'Scaling UX, Research, and Design skills group-wide.' }], collage: [gpTeamPhoto, eventImage, groupImage, teamImage1] },
-  { id: 'strategy', category: '04 / THE STRATEGY', title: 'Architecture of Convergence', sidebarLabel: 'STRATEGY', subtitle: 'From Fragmented Design to Systemic Growth', description: 'We didn’t just build a team; we built a shared operating system. By abstracting complexity, we allowed 4 independent banks to scale UX maturity.', pillars: [{ id: 'foundation', title: 'Foundation', label: 'CORE', text: 'Shared Design System and Methodological Toolkit.', icon: 'Layers' }, { id: 'orchestration', title: 'Orchestration', label: 'FLOW', text: 'Governance models that sync 50+ designers.', icon: 'Zap' }, { id: 'enablement', title: 'Enablement', label: 'IMPACT', text: 'Coaching and growth paths for localized squads.', icon: 'Target' }, { id: 'metrics', title: 'CX Metrics & Insights', label: 'DATA', text: 'Measuring impact and user feedback group-wide.', icon: 'Target' }] },
-  { id: 'toolkit', category: '05 / THE TOOLKIT', title: 'Governance through Design', sidebarLabel: 'TOOLKIT', description: 'We developed custom methodological frameworks to move from tactical design to strategic influence.', artifacts: [
-    { 
-      id: 'maturity', title: 'Maturity Framework', tag: 'EVALUATION', text: 'CX/UX team maturity assessment across the 4 banks.', image: maturityFramework,
-      insights: [
-        'Cross-bank evaluation methodology.',
-        'Identification of operational gaps.',
-        'Strategic UX scalability roadmap.',
-        'Standardized maturity scoring.'
-      ]
+const slidesData = [
+  { 
+    id: 'cover', 
+    sidebarLabel: { EN: 'COVER', ES: 'INICIO' },
+    EN: { title: 'Experience Center of Excellence', subtitle: 'Transforming organizational design into measurable customer experience impact.', category: 'GRUP Petersen', metadata: 'Head of Customer Experience', year: '2023 — 2025' },
+    ES: { title: 'Centro de Excelencia de Experiencia', subtitle: 'Transformando el diseño organizacional en un impacto medible en la experiencia del cliente.', category: 'GRUP Petersen', metadata: 'Responsable de Experiencia del Cliente', year: '2023 — 2025' }
+  },
+  { 
+    id: 'context', 
+    sidebarLabel: { EN: 'CONTEXT', ES: 'CONTEXTO' },
+    EN: { title: 'From interfaces to products', category: '01 / CONTEXT', content: 'In 2022, UX existed as a small, execution-focused UI team.\nAcross four banks, there were four designers — mostly working on digital interfaces.\n\nAt the same time, the group began moving toward product-based teams.\nDigital channels were partially unified.\nServices, processes, and technology weren’t.\n\nEach bank still operated with its own realities.\nDifferent priorities.\nDifferent decision paths.\nSame customers.\n\nThis wasn’t only fragmentation.\nIt was a shift in how products would need to be built.' },
+    ES: { title: 'De interfaces a productos', category: '01 / CONTEXTO', content: 'En 2022, UX existía como un equipo pequeño de UI enfocado en la ejecución.\nEn cuatro bancos, había cuatro diseñadores — trabajando mayormente en interfaces digitales.\n\nAl mismo tiempo, el grupo comenzó a transicionar hacia equipos basados en productos.\nLos canales digitales se unificaron parcialmente.\nLos servicios, procesos y tecnología no.\n\nCada banco seguía operando con sus propias realidades.\nPrioridades distintas.\nCaminos de decisión diferentes.\nMismos clientes.\n\nEsto no era solo fragmentación.\nEra un cambio en la forma en que los productos debían construirse.' }
+  },
+  { 
+    id: 'challenge', 
+    sidebarLabel: { EN: 'CHALLENGE', ES: 'DESAFÍO' },
+    EN: { title: 'The Fragmentation Barrier', category: '02 / THE CHALLENGE', introText: 'Product teams were starting to form. The ambition was there: move faster, ship more, own outcomes.\n\nBut the capability behind those teams wasn’t ready yet. Without shared research, standards, governance, and measurement, autonomy turns into inconsistency — and speed turns into rework.\n\nWhat we needed wasn’t “more design”. We needed a system that could scale across four realities.' },
+    ES: { title: 'La barrera de la fragmentación', category: '02 / EL DESAFÍO', introText: 'Los equipos de producto estaban empezando a formarse. La ambición estaba ahí: moverse más rápido, entregar más, ser dueños de los resultados.\n\nPero la capacidad detrás de esos equipos aún no estaba lista. Sin investigación compartida, estándares, gobernanza y medición, la autonomía se convierte en inconsistencia — y la velocidad en retrabajo.\n\nLo que necesitábamos no era "más diseño". Necesitábamos un sistema que pudiera escalar a través de cuatro realidades.' }
+  },
+  { 
+    id: 'pillars', 
+    sidebarLabel: { EN: 'OPERATING MODEL', ES: 'MODELO OPERATIVO' },
+    EN: { 
+      title: 'The Operating Model', category: '03 / SYSTEM', 
+      introText: 'To bridge the gap between autonomy and consistency, we defined four operational mandates that became the backbone of the CoE.\n\nThese pillars allowed us to protect the craft while empowering product squads to move at their own pace.', 
+      missionBullets: [
+        { icon: 'Share2', label: 'MULTI-BANK', text: 'Operate across four bank realities.', subtext: 'Different services, processes, and tech constraints — one operating model.' }, 
+        { icon: 'Zap', label: 'AUTONOMY', text: 'Support product teams.', subtext: 'Shared tools and rituals so teams could move without waiting for a central backlog.' }, 
+        { icon: 'Target', label: 'ALIGNMENT', text: 'Business priorities first.', subtext: 'A way to make trade-offs visible and align decisions across Business and Tech.' }, 
+        { icon: 'Layers', label: 'SYSTEMIC', text: 'Scale without friction.', subtext: 'Research loops, standards, and metrics that reduce rework over time.' }
+      ] 
     },
-    { 
-      id: 'scales', title: 'Role Maturity Scales', tag: 'IMPACT', text: 'Definition of how each role contributes to strategic influence.', image: maturityScales,
-      insights: [
-        'Seniority based on business impact.',
-        'Clear promotion criteria.',
-        'Alignment with Central CoE.',
-        'Skill mapping across entities.'
-      ]
-    },
-    { 
-      id: 'effort', title: 'Effort–Uncertainty Model', tag: 'PRIORITIZATION', text: 'A collaborative model for risk-based backlog planning.', image: effortModel,
-      insights: [
-        'Risk-based prioritization.',
-        'Technical uncertainty reduction.',
-        'Design backlog optimization.',
-        'Stakeholder alignment tool.'
-      ]
+    ES: { 
+      title: 'El modelo operativo', category: '03 / SISTEMA', 
+      introText: 'Para cerrar la brecha entre autonomía y consistencia, definimos cuatro mandatos operativos que se convirtieron en la columna vertebral del CoE.\n\nEstos pilares nos permitieron proteger el oficio mientras empoderábamos a las células de producto para moverse a su propio ritmo.', 
+      missionBullets: [
+        { icon: 'Share2', label: 'MULTI-BANCO', text: 'Operar en cuatro realidades bancarias.', subtext: 'Diferentes servicios, procesos y restricciones tecnológicas — un solo modelo operativo.' }, 
+        { icon: 'Zap', label: 'AUTONOMÍA', text: 'Soporte a equipos de producto.', subtext: 'Herramientas y rituales compartidos para que los equipos avancen sin esperar un backlog central.' }, 
+        { icon: 'Target', label: 'ALINEACIÓN', text: 'Prioridades de negocio primero.', subtext: 'Una forma de visibilizar los compromisos y alinear decisiones entre Negocio y Tecnología.' }, 
+        { icon: 'Layers', label: 'SISTÉMICO', text: 'Escalar sin fricciones.', subtext: 'Ciclos de investigación, estándares y métricas que reducen el retrabajo con el tiempo.' }
+      ] 
     }
-  ] },
-  { id: 'impact', title: 'Outcomes at scale', category: '06 / THE IMPACT', sidebarLabel: 'IMPACT', stats: [{ value: '+10', label: 'NPS INCREASE', sub: 'Across priority journeys' }, { value: '−30%', label: 'REWORK REDUCTION', sub: 'In CX initiatives' }, { value: '100+', label: 'ALIGNED PROJECTS', sub: 'Under shared OKRs' }], whatChanged: ['CX governance implemented across 4 banks', '50+ UX professionals operating under shared principles', 'UX, CX, and VoC integrated into a single experience model', 'Experience initiatives managed through measurable OKRs', 'Design System adopted across 4 brands'] },
-  { id: 'governance', category: '07 / GOVERNANCE', title: 'The Rituals of Scale', sidebarLabel: 'GOVERNANCE', description: 'Scaling to 50+ professionals across 4 banks required more than a chart; it required a heartbeat.', rituals: [{ icon: 'Users', title: 'CX Chapter', freq: 'Bi-weekly', text: 'Knowledge sharing and craft alignment across all banks.' }, { icon: 'Eye', title: 'Design Critiques', freq: 'Weekly', text: 'Peer reviews to ensure quality.' }, { icon: 'ClipboardCheck', title: 'Sync Meetings', freq: 'Monthly', text: 'Strategic alignment with Business and Tech.' }] },
-  { id: 'learnings', category: '08 / REFLECTION', title: 'Systemic Learnings', sidebarLabel: 'LEARNINGS', description: 'Building a CoE is as much about cultural change as it is about organizational design.', lessons: [{ title: 'Trust over Tools', text: 'Methodologies only work when there is a foundation of psychological safety.', icon: 'Heart' }, { title: 'Scale is a Craft', text: 'Designing the team is as critical as designing the product.', icon: 'Layers' }, { title: 'Business Language', text: 'CX impact must be translated into business value.', icon: 'Target' }] },
-  { id: 'closing', category: '09 / THE FUTURE', title: 'Building for what comes next', sidebarLabel: 'CLOSING', subtitle: 'From a Center of Excellence to a Culture of Excellence.', description: 'The transformation demonstrating that experience design is the ultimate business advantage.', contactInfo: { name: 'Viviana Fernández', role: 'CX & Organizational Design Specialist', email: 'vfernandezdieguez@gmail.com', linkedIn: 'linkedin.com/in/vfernandezdieguez/' } }
+  },
+  { 
+    id: 'strategy', 
+    sidebarLabel: { EN: 'STRATEGY', ES: 'ESTRATEGIA' },
+    EN: { 
+      category: '04 / THE STRATEGY', title: 'Architecture of Convergence', subtitle: 'From Fragmented Design to Systemic Growth', 
+      description: 'We didn’t just build a team; we built a shared operating system. By abstracting complexity, we allowed 4 independent banks to scale UX maturity.', 
+      pillars: [
+        { id: 'foundation', title: 'Foundation', label: 'CORE', text: 'Shared Design System and Methodological Toolkit.', icon: 'Layers' }, 
+        { id: 'orchestration', title: 'Orchestration', label: 'FLOW', text: 'Governance models that sync 50+ designers.', icon: 'Zap' }, 
+        { id: 'enablement', title: 'Enablement', label: 'IMPACT', text: 'Coaching and growth paths for localized squads.', icon: 'Target' }, 
+        { id: 'metrics', title: 'CX Metrics & Insights', label: 'DATA', text: 'Measuring impact and user feedback group-wide.', icon: 'Target' }
+      ] 
+    },
+    ES: { 
+      category: '04 / LA ESTRATEGIA', title: 'Arquitectura de convergencia', subtitle: 'Del diseño fragmentado al crecimiento sistémico', 
+      description: 'No solo construimos un equipo; construimos un sistema operativo compartido. Al abstraer la complejidad, permitimos que 4 bancos independientes escalaran su madurez de UX.', 
+      pillars: [
+        { id: 'foundation', title: 'Cimientos', label: 'NÚCLEO', text: 'Design System compartido y toolkit metodológico.', icon: 'Layers' }, 
+        { id: 'orchestration', title: 'Orquestación', label: 'FLUJO', text: 'Modelos de gobernanza que sincronizan a más de 50 diseñadores.', icon: 'Zap' }, 
+        { id: 'enablement', title: 'Habilitación', label: 'IMPACTO', text: 'Caminos de coaching y crecimiento para equipos localizados.', icon: 'Target' }, 
+        { id: 'metrics', title: 'Métricas e Insights de CX', label: 'DATOS', text: 'Midiendo el impacto y el feedback de usuarios en todo el grupo.', icon: 'Target' }
+      ] 
+    }
+  },
+  { 
+    id: 'role', 
+    sidebarLabel: { EN: 'MY ROLE', ES: 'MI ROL' },
+    collage: [gpTeamPhoto, eventImage, groupImage, teamImage1],
+    EN: { 
+      title: 'Architecting the System', category: '05 / MY ROLE', roleIntro: 'My role was to design and install the operating model behind Experience across four banks.\n\nNot to centralize decisions.\nNot to take over product.\n\nI worked across three layers:', 
+      roleBullets: [
+        { label: 'STRATEGY', title: 'Strategy', text: 'Defining principles and governance.' }, 
+        { label: 'ORGANIZATION', title: 'Organization', text: 'Designing the CoE model.' }, 
+        { label: 'CAPABILITY', title: 'Capability', text: 'Developing talent and maturity paths.' }
+      ] 
+    },
+    ES: { 
+      title: 'Arquitecto del sistema', category: '05 / MI ROL', roleIntro: 'Mi rol fue diseñar e instalar el modelo operativo detrás de Experiencia en los cuatro bancos.\n\nNo para centralizar decisiones.\nNo para apropiarme del producto.\n\nTrabajé en tres capas:', 
+      roleBullets: [
+        { label: 'ESTRATEGIA', title: 'Estrategia', text: 'Definición de principios y gobernanza.' }, 
+        { label: 'ORGANIZACIÓN', title: 'Organización', text: 'Diseño del modelo de CoE.' }, 
+        { label: 'CAPACIDAD', title: 'Capacidad', text: 'Desarrollo de talento y rutas de madurez.' }
+      ] 
+    }
+  },
+  { 
+    id: 'toolkit', 
+    sidebarLabel: { EN: 'TOOLKIT', ES: 'HERRAMIENTAS' },
+    EN: { 
+      category: '06 / THE TOOLKIT', title: 'Governance through Design', description: 'We developed custom methodological frameworks to move from tactical design to strategic influence.', 
+      artifacts: [
+        { 
+          id: 'maturity', title: 'Maturity Framework', tag: 'EVALUATION', image: maturityFramework,
+          text: 'CX/UX maturity assessment across four banks.', 
+          methodology: 'A maturity model used to align priorities and stop low-impact work — so effort was directed toward structural consistency across entities.',
+          insights: [
+            'A shared baseline for decision-making.',
+            'Clear capability gaps by discipline and by bank.',
+            'A roadmap anchored in capability — not incoming requests.',
+            'Consistent scoring to track progress over time.'
+          ]
+        },
+        { 
+          id: 'scales', title: 'Role Maturity Scales', tag: 'IMPACT', image: maturityScales,
+          text: 'Definition of how each role contributes to strategic influence.', 
+          description: 'We needed a shared language to define what “senior” meant across four banks.\n\nRoles existed.\nTitles existed.\nExpectations did not.',
+          methodology: 'A maturity model used to:\n\n• Clarify decision ownership across roles.\n• Align growth paths with product impact.\n• Identify capability gaps before hiring.\n• Redirect effort from tactical output to strategic influence.',
+          quote: 'The framework allowed us to stop misaligned growth. Not every team needed more designers; some needed stronger product thinking.',
+          insights: [
+            'Seniority defined by business impact — not years of experience.',
+            'Clear contribution levels across Product, Design, and Research.',
+            'Alignment with the Central CoE operating principles.',
+            'Cross-bank skill visibility and capability mapping.'
+          ]
+        },
+        { 
+          id: 'effort', title: 'Effort–Uncertainty Model', tag: 'PRIORITIZATION', image: effortModel,
+          text: 'A shared model to plan and challenge CX initiatives across entities.', 
+          methodology: 'A prioritization model that allowed us to stop projects — not just rank them — and reduce rework before delivery started.',
+          insights: [
+            'Risk-based backlog planning.',
+            'Technical and discovery uncertainty visibility.',
+            'Design effort aligned with business validation.',
+            'Shared decision criteria across banks.'
+          ]
+        }
+      ] 
+    },
+    ES: { 
+      category: '06 / EL TOOLKIT', title: 'Gobernanza a través del diseño', description: 'Desarrollamos marcos metodológicos a medida para pasar del diseño táctico a la influencia estratégica.', 
+      artifacts: [
+        { 
+          id: 'maturity', title: 'Marco de Madurez', tag: 'EVALUACIÓN', image: maturityFramework,
+          text: 'Evaluación de madurez de CX/UX en los cuatro bancos.', 
+          methodology: 'Un modelo de madurez utilizado para alinear prioridades y detener el trabajo de bajo impacto, de modo que el esfuerzo se dirigiera a la consistencia estructural entre entidades.',
+          insights: [
+            'Una base compartida para la toma de decisiones.',
+            'Brechas de capacidad claras por disciplina y por banco.',
+            'Una hoja de ruta anclada en la capacidad, no en solicitudes entrantes.',
+            'Puntaje consistente para seguir el progreso en el tiempo.'
+          ]
+        },
+        { 
+          id: 'scales', title: 'Escalas de Madurez de Rol', tag: 'IMPACTO', image: maturityScales,
+          text: 'Definición de cómo cada rol contribuye a la influencia estratégica.', 
+          description: 'Necesitábamos un lenguaje compartido para definir qué significaba "senior" en los cuatro bancos.\n\nLos roles existían.\nLos títulos existían.\nLas expectativas no.',
+          methodology: 'Un modelo de madurez utilizado para:\n\n• Clarificar la propiedad de decisiones por rol.\n• Alineación de rutas de crecimiento con el impacto en producto.\n• Identificar brechas de capacidad antes de contratar.\n• Redirigir el esfuerzo de resultados tácticos a la influencia estratégica.',
+          quote: 'El marco nos permitió detener el crecimiento desalineado. No todos los equipos necesitaban más diseñadores; algunos necesitaban un pensamiento de producto más sólido.',
+          insights: [
+            'Seniority definida por impacto de negocio, no por años de experiencia.',
+            'Niveles de contribución claros en Producto, Diseño e Investigación.',
+            'Alineación con los principios operativos del CoE Central.',
+            'Visibilidad de habilidades y mapeo de capacidades entre bancos.'
+          ]
+        },
+        { 
+          id: 'effort', title: 'Modelo Esfuerzo-Incertidumbre', tag: 'PRIORIZACIÓN', image: effortModel,
+          text: 'Un modelo compartido para planificar y desafiar iniciativas de CX entre entidades.', 
+          methodology: 'Un modelo de priorización que nos permitió detener proyectos, no solo clasificarlos, y reducir el retrabajo antes de que comenzara la entrega.',
+          insights: [
+            'Planificación de backlog basada en riesgos.',
+            'Visibilidad de la incertidumbre técnica y de descubrimiento.',
+            'Esfuerzo de diseño alineado con la validación de negocio.',
+            'Criterios de decisión compartidos entre los bancos.'
+          ]
+        }
+      ] 
+    }
+  },
+  { 
+    id: 'governance', 
+    sidebarLabel: { EN: 'GOVERNANCE', ES: 'GOBERNANZA' },
+    EN: { 
+      category: '07 / GOVERNANCE', title: 'The Operating Cadence', description: 'Scaling to 50+ professionals across 4 banks required more than a heartbeat.', 
+      introTitle: 'Scaling 50+ professionals across 4 banks required a shared decision rhythm.',
+      introSubtitle: 'This cadence replaced ad-hoc coordination with institutional discipline.',
+      rituals: [
+        { num: "01", title: "CX Chapter", freq: "Bi-weekly", desc: ["Craft alignment across banks.", "Shared criteria for what “good” looks like."] }, 
+        { num: "02", title: "Design Critiques", freq: "Weekly", desc: ["Peer reviews to ensure quality.", "Scaling standards without centralizing output."] }, 
+        { num: "03", title: "Sync Meetings", freq: "Monthly", desc: ["Strategic alignment with Business & Tech.", "Ensuring UX maturity scales with product speed."] }
+      ] 
+    },
+    ES: { 
+      category: '07 / GOBERNANZA', title: 'Los rituales del escalado', description: 'Escalar a más de 50 profesionales en 4 bancos requirió más que solo coordinación.', 
+      introTitle: 'Escalar a más de 50 profesionales en 4 bancos requirió un ritmo compartido de decisiones.',
+      introSubtitle: 'Esta cadencia reemplazó la coordinación ad-hoc con una disciplina institucional.',
+      rituals: [
+        { num: "01", title: "CX Chapter", freq: "Quincenal", desc: ["Alineación del oficio en todos los bancos.", "Criterios compartidos sobre qué es calidad."] }, 
+        { num: "02", title: "Design Critiques", freq: "Semanal", desc: ["Revisiones entre pares para asegurar la calidad.", "Escalar estándares sin centralizar la producción."] }, 
+        { num: "03", title: "Sync Meetings", freq: "Mensual", desc: ["Alineación estratégica con Negocio y Tecnología.", "Asegurar que la madurez escala con la velocidad de producto."] }
+      ] 
+    }
+  },
+  { 
+    id: 'impact', 
+    sidebarLabel: { EN: 'IMPACT', ES: 'IMPACTO' },
+    EN: { 
+      title: 'Tangible Evolution', category: '08 / THE IMPACT', 
+      stats: [
+        { value: '+10', label: 'NPS INCREASE', sub: 'Across priority journeys' }, 
+        { value: '−30%', label: 'REWORK REDUCTION', sub: 'In CX initiatives' }, 
+        { value: '100+', label: 'ALIGNED PROJECTS', sub: 'Under shared OKRs' }
+      ], 
+      narrative: [
+        "CX governance implemented across 4 banks.",
+        "50+ UX professionals operating under shared principles.",
+        "UX, CX, and VoC integrated into one operating model.",
+        "Design System adopted across 4 brands."
+      ],
+      closingNote: "Results were not driven by isolated design improvements. They were the outcome of installing a shared operating model across banks.",
+      bullets: ["The shift was structural.", "Alignment reduced rework.", "Governance increased predictability."]
+    },
+    ES: { 
+      title: 'Evolución Tangible', category: '08 / EL IMPACTO', 
+      stats: [
+        { value: '+10', label: 'INCREMENTO NPS', sub: 'En viajes prioritarios' }, 
+        { value: '−30%', label: 'REDUCCIÓN RETRABAJO', sub: 'En iniciativas de CX' }, 
+        { value: '100+', label: 'PROYECTOS ALINEADOS', sub: 'Bajo OKRs compartidos' }
+      ], 
+      narrative: [
+        "Gobernanza de CX implementada en 4 bancos.",
+        "Más de 50 profesionales de UX operando bajo principios compartidos.",
+        "UX, CX y VoC integrados en un único modelo de experiencia.",
+        "Design System adoptado en las 4 marcas."
+      ],
+      closingNote: "Los resultados no fueron impulsados por mejoras de diseño aisladas. Fueron el resultado de instalar un modelo operativo compartido entre bancos.",
+      bullets: ["El cambio fue estructural.", "La alineación redujo el retrabajo.", "La gobernanza aumentó la previsibilidad."]
+    }
+  },
+  { 
+    id: 'impact-practice', 
+    sidebarLabel: { EN: 'IMPACT', ES: 'IMPACTO' },
+    EN: { 
+      category: '08 / THE IMPACT', title: 'What Changed in Practice', introTitle: 'The transformation was not structural only.', introSubtitle: 'It changed how product decisions were made.', 
+      changes: [
+        "Experience criteria became part of roadmap conversations.", 
+        "Research was embedded in priority journeys.", 
+        "Cross-bank inconsistencies were escalated and resolved at governance level.", 
+        "Design moved from execution to influence."
+      ], 
+      footerNote: "Product teams gained autonomy — but within shared standards." 
+    },
+    ES: { 
+      category: '08 / EL IMPACTO', title: 'Qué cambió en la práctica', introTitle: 'La transformación no fue solo estructural.', introSubtitle: 'Cambió la forma en que se tomaban las decisiones de producto.', 
+      changes: [
+        "Los criterios de experiencia se volvieron parte de las conversaciones de roadmap.",
+        "La investigación se integró en los viajes prioritarios del cliente.",
+        "Las inconsistencias entre bancos se escalaron y resolvieron a nivel de gobernanza.",
+        "El diseño pasó de la ejecución a la influencia estratégica."
+      ], 
+      footerNote: "Los equipos de producto ganaron autonomía, pero dentro de estándares compartidos." 
+    }
+  },
+  { 
+    id: 'learnings', 
+    sidebarLabel: { EN: 'LEARNINGS', ES: 'APRENDIZAJES' },
+    EN: { 
+      category: '09 / REFLECTIONS', title: 'Systemic Learnings', description: 'Building a CoE is as much about organizational architecture\nas it is about cultural discipline.', 
+      lessons: [
+        { title: 'Trust over Tools', text: 'Frameworks only work when executive trust exists.', icon: 'Heart' }, 
+        { title: 'Scale is a Craft', text: 'Capability grows through structure, feedback loops, and consistency.', icon: 'Layers' }, 
+        { title: 'Business Language', text: 'Experience becomes strategic only when translated into measurable value.', icon: 'Target' }
+      ] 
+    },
+    ES: { 
+      category: '09 / REFLEXIONES', title: 'Aprendizajes sistémicos', description: 'Construir un CoE es tanto sobre arquitectura organizacional\ncomo sobre disciplina cultural.', 
+      lessons: [
+        { title: 'Confianza sobre herramientas', text: 'Los marcos de trabajo solo funcionan cuando existe confianza ejecutiva.', icon: 'Heart' }, 
+        { title: 'Escalar es un oficio', text: 'La capacidad crece a través de la estructura, los ciclos de retroalimentación y la consistencia.', icon: 'Layers' }, 
+        { title: 'Lenguaje de negocios', text: 'La experiencia se vuelve estratégica solo cuando se traduce en valor medible.', icon: 'Target' }
+      ] 
+    }
+  },
+  { 
+    id: 'closing', 
+    sidebarLabel: { EN: 'CLOSING', ES: 'CIERRE' },
+    EN: { 
+      category: '10 / THE FUTURE', title: 'Building for what comes next', subtitle: 'From a Center of Excellence to a Culture of Excellence.', 
+      description: 'The transformation demonstrating that experience design is the ultimate business advantage.', 
+      manifesto: "Bridging organizational architecture and business strategy to build high-performance systems that drive scalability and cultural alignment.",
+      nextCase: "View next case",
+      pdf: "Download Portfolio (PDF)",
+      contactInfo: { name: 'Viviana Fernández', role: 'CX & Organizational Design Specialist', email: 'vfernandezdieguez@gmail.com', linkedIn: 'linkedin.com/in/vfernandezdieguez/' } 
+    },
+    ES: { 
+      category: '10 / EL FUTURO', title: 'Construyendo para lo que viene', subtitle: 'De un Centro de Excelencia a una Cultura de Excelencia.', 
+      description: 'La transformación demuestra que el diseño de experiencia es la ventaja competitiva definitiva.', 
+      manifesto: "Uniendo la arquitectura organizacional y la estrategia de negocio para construir sistemas de alto rendimiento que impulsen el escalado y la alineación cultural.",
+      nextCase: "Siguiente caso",
+      pdf: "Descargar Portfolio (PDF)",
+      contactInfo: { name: 'Viviana Fernández', role: 'Especialista en CX y Diseño Organizacional', email: 'vfernandezdieguez@gmail.com', linkedIn: 'linkedin.com/in/vfernandezdieguez/' } 
+    }
+  }
 ];
 
 // --- COMPONENTS ---
@@ -72,82 +330,11 @@ const BackgroundMotion = () => (
   </div>
 );
 
-// --- CUSTOM ICONOGRAPHY & DIAGRAMS (MARIMEKKO & APPLE INSPIRED) ---
+// --- CUSTOM ICONOGRAPHY & DIAGRAMS ---
 
-const MarimekkoDot = ({ color = "#D8614E", size = 20, className = "" }: any) => (
-  <div className={`rounded-full ${className}`} style={{ backgroundColor: color, width: size, height: size, filter: 'blur(0.5px)' }} />
-);
-
-const CustomIcon = ({ name, size = 24, className = "" }: any) => {
-  const icons: any = {
-    Share2: (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-        <circle cx="18" cy="5" r="3" fill="currentColor" opacity="0.9" />
-        <circle cx="6" cy="12" r="3" fill="currentColor" opacity="0.7" />
-        <circle cx="18" cy="19" r="3" fill="currentColor" opacity="0.9" />
-        <path d="M8.59 13.51L15.42 17.49M15.41 6.51L8.59 10.49" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    ),
-    Zap: (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-        <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="currentColor" stroke="currentColor" strokeWidth="1" strokeLinejoin="round" />
-      </svg>
-    ),
-    Target: (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="12" cy="12" r="6" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="12" cy="12" r="2" fill="currentColor" />
-      </svg>
-    ),
-    Layers: (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-        <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor" opacity="0.4" />
-        <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    ),
-    Users: (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-        <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2" />
-        <path d="M23 21V19C23 17.83 22.44 16.79 21.58 16.11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <circle cx="17" cy="8" r="3" stroke="currentColor" strokeWidth="2" />
-      </svg>
-    ),
-    MessageSquare: (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-        <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" fill="currentColor" opacity="0.2" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-      </svg>
-    ),
-    ClipboardCheck: (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-        <path d="M16 4H18C19.1046 4 20 4.89543 20 6V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V6C4 4.89543 4.89543 4 6 4H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <rect x="8" y="2" width="8" height="4" rx="1" fill="currentColor" />
-        <path d="M9 14L11 16L15 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-    Heart: (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-        <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z" fill="currentColor" stroke="currentColor" strokeWidth="1" />
-      </svg>
-    ),
-    Mail: (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-        <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" strokeWidth="2" />
-        <path d="M22 6L12 13L2 6" stroke="currentColor" strokeWidth="2" />
-      </svg>
-    ),
-  };
-  return icons[name] || <div className="w-6 h-6 bg-slate-200 rounded-sm" />;
-};
-
-const ChallengeDiagram = () => (
+const ChallengeDiagram = ({ lang }: { lang: string }) => (
   <div className="relative w-full h-full flex items-center justify-center p-2 lg:p-6">
-    {/* Contenedor Glassmorphism con alto contraste para destacar del fondo */}
     <div className="relative w-full aspect-square flex items-center justify-center rounded-[64px] lg:rounded-[80px] bg-white/70 backdrop-blur-[40px] border border-white/90 shadow-[0_80px_160px_-40px_rgba(14,78,104,0.25),0_0_100px_rgba(26,142,159,0.05)] overflow-visible group transition-transform duration-700 hover:scale-[1.02]">
-      
-      {/* Grano y aura interna optimizada */}
       <div className="absolute inset-0 opacity-[0.1] pointer-events-none rounded-[64px] lg:rounded-[80px]" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }} />
       <div className="absolute inset-0 bg-gradient-to-tr from-[#1A8E9F]/20 via-transparent to-[#D8614E]/15 rounded-[64px] lg:rounded-[80px] opacity-40" />
 
@@ -159,7 +346,6 @@ const ChallengeDiagram = () => (
           </filter>
         </defs>
 
-        {/* Dynamic Background Network */}
         <g stroke="#0E4E68" strokeWidth="1.2" strokeDasharray="8 24" opacity="0.4">
           <circle cx="350" cy="350" r="280" fill="none" />
           <circle cx="350" cy="350" r="180" fill="none" />
@@ -173,67 +359,50 @@ const ChallengeDiagram = () => (
           ))}
         </g>
 
-        {/* FLOWING PARTICLES - Radiating from COE to Banks */}
+        {/* FLOWING PARTICLES - Animación restaurada y potenciada */}
         <g>
           {[
             { path: "M 350 350 L 120 120", delay: 0 },
             { path: "M 350 350 L 580 120", delay: 1.5 },
             { path: "M 350 350 L 120 580", delay: 0.7 },
-            { path: "M 350 350 L 580 580", delay: 2.2 }
+            { path: "M 350 350 L 580 580", delay: 2.2 },
+            { path: "M 350 350 L 120 120", delay: 1 },
+            { path: "M 350 350 L 580 120", delay: 2.5 },
+            { path: "M 350 350 L 120 580", delay: 1.7 },
+            { path: "M 350 350 L 580 580", delay: 3.2 }
           ].map((flow, i) => (
-            <circle key={`out-${i}`} r="3" fill="#1A8E9F">
-              <animateMotion dur="3s" repeatCount="indefinite" path={flow.path} begin={`${flow.delay}s`} />
-              <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" begin={`${flow.delay}s`} />
-            </circle>
-          ))}
-        </g>
-
-        {/* FLOWING PARTICLES - Returning from Banks to COE */}
-        <g>
-          {[
-            { path: "M 120 120 L 350 350", delay: 0.5 },
-            { path: "M 580 120 L 350 350", delay: 2.0 },
-            { path: "M 120 580 L 350 350", delay: 1.2 },
-            { path: "M 580 580 L 350 350", delay: 2.7 }
-          ].map((flow, i) => (
-            <circle key={`in-${i}`} r="2.5" fill="#D8614E">
+            <circle key={`out-${i}`} r="4" fill="#1A8E9F" opacity="0">
               <animateMotion dur="4s" repeatCount="indefinite" path={flow.path} begin={`${flow.delay}s`} />
-              <animate attributeName="opacity" values="0;0.8;0" dur="4s" repeatCount="indefinite" begin={`${flow.delay}s`} />
+              <animate attributeName="opacity" values="0;1;0" dur="4s" repeatCount="indefinite" begin={`${flow.delay}s`} />
             </circle>
           ))}
         </g>
 
-        {/* Central Core (Center of Excellence) */}
         <g filter="url(#centerGlow)">
           <circle cx="350" cy="350" r="95" fill="#0E4E68" />
-          <text x="350" y="335" textAnchor="middle" fill="white" fontSize="11" fontWeight="900" letterSpacing="0.4em" className="font-sans opacity-70">CENTER OF</text>
-          <text x="350" y="372" textAnchor="middle" fill="white" fontSize="28" className={`${Typography.title} italic font-normal`}>Excellence</text>
+          <text x="350" y="335" textAnchor="middle" fill="white" fontSize="11" fontWeight="900" letterSpacing="0.4em" className="font-sans opacity-70 uppercase">
+            {lang === 'EN' ? 'CENTER OF' : 'CENTRO DE'}
+          </text>
+          <text x="350" y="372" textAnchor="middle" fill="white" fontSize="28" className={`${Typography.title} italic font-normal`}>
+            {lang === 'EN' ? 'Excellence' : 'Excelencia'}
+          </text>
           <circle cx="435" cy="350" r="8" fill="#D8614E" />
         </g>
 
-        {/* Entity Nodes (Banks) */}
         {[
-          { x: 120, y: 120, label: 'BANK A' },
-          { x: 580, y: 120, label: 'BANK B' },
-          { x: 120, y: 580, label: 'BANK C' },
-          { x: 580, y: 580, label: 'BANK D' }
+          { x: 120, y: 120, label: lang === 'EN' ? 'BANK A' : 'BANCO A' },
+          { x: 580, y: 120, label: lang === 'EN' ? 'BANK B' : 'BANCO B' },
+          { x: 120, y: 580, label: lang === 'EN' ? 'BANK C' : 'BANCO C' },
+          { x: 580, y: 580, label: lang === 'EN' ? 'BANK D' : 'BANCO D' }
         ].map((bank, i) => (
           <g key={i}>
             <circle cx={bank.x} cy={bank.y} r="65" fill="white" fillOpacity="1" stroke="#0E4E68" strokeWidth="1.5" />
-            <text x={bank.x} y={bank.y + 6} textAnchor="middle" fill="#0E4E68" fontSize="14" fontWeight="900" letterSpacing="0.25em" className="font-sans">
-              {bank.label}
-            </text>
+            <text x={bank.x} y={bank.y + 6} textAnchor="middle" fill="#0E4E68" fontSize="14" fontWeight="900" letterSpacing="0.25em" className="font-sans">{bank.label}</text>
           </g>
         ))}
 
-        {/* Strategic Flow Connections */}
         <g>
-          {[
-            "M 120 120 L 350 350",
-            "M 580 120 L 350 350",
-            "M 120 580 L 350 350",
-            "M 580 580 L 350 350"
-          ].map((path, i) => (
+          {["M 120 120 L 350 350", "M 580 120 L 350 350", "M 120 580 L 350 350", "M 580 580 L 350 350"].map((path, i) => (
             <path key={i} d={path} stroke="#1A8E9F" strokeWidth="2.5" strokeDasharray="10 10" opacity="0.3" />
           ))}
         </g>
@@ -242,134 +411,117 @@ const ChallengeDiagram = () => (
   </div>
 );
 
-const StrategyDiagram = () => (
-  <div className="w-full h-full flex items-center justify-center p-4">
-    <div className="relative w-full h-full flex items-center justify-center">
-      <svg 
-        viewBox="-160 0 1260 500" 
-        className="w-full h-full overflow-visible drop-shadow-sm" 
-        preserveAspectRatio="xMidYMid meet"
-      >
-        {/* 1. Agencies & Focal Points (Left Side) */}
-        <g transform="translate(-80, 250)">
-          {[
-            { y: -80, label: 'AGENCY A' },
-            { y: 80, label: 'AGENCY B' }
-          ].map((item, i) => (
-            <g key={i} transform={`translate(0, ${item.y})`}>
-               <rect x="-40" y="-15" width="80" height="30" rx="4" fill="white" stroke="#0E4E68" strokeWidth="0.5" strokeOpacity="0.2" className="drop-shadow-sm" />
-               <text textAnchor="middle" y="4" fill="#0E4E68" fontSize="8" fontWeight="900" letterSpacing="0.1em" opacity="0.4">{item.label}</text>
-               <line x1="40" y1="0" x2="75" y2="0" stroke="#0E4E68" strokeWidth="0.5" strokeDasharray="2 2" opacity="0.3" />
-               <circle cx="100" cy="0" r="25" fill="white" stroke="#0E4E68" strokeWidth="0.5" strokeOpacity="0.1" className="drop-shadow-sm" />
-               <text x="100" textAnchor="middle" y="-2" fill="#0E4E68" fontSize="6" fontWeight="900" letterSpacing="0.1em" opacity="0.3">FOCAL</text>
-               <text x="100" textAnchor="middle" y="6" fill="#0E4E68" fontSize="6" fontWeight="900" letterSpacing="0.1em" opacity="0.3">POINT</text>
-               <path d="M 125 0 Q 180 0 200 0" fill="none" stroke="#1A8E9F" strokeWidth="1" strokeDasharray="4 4" opacity="0.3" />
-            </g>
-          ))}
-        </g>
+const StrategyDiagram = ({ lang }: { lang: string }) => (
+  <div className="relative w-full h-full flex items-center justify-center overflow-visible group/diagram">
+    <svg viewBox="0 0 1200 500" className="w-full h-full overflow-visible drop-shadow-sm" preserveAspectRatio="xMidYMid meet">
+      {/* Agencies Group (Left) */}
+      <g transform="translate(100, 250)">
+        {[
+          { y: -80, label: lang === 'EN' ? 'AGENCY A' : 'AGENCIA A' },
+          { y: 80, label: lang === 'EN' ? 'AGENCY B' : 'AGENCIA B' }
+        ].map((item, i) => (
+          <g key={i} transform={`translate(0, ${item.y})`}>
+            <rect x="-45" y="-18" width="90" height="36" rx="6" fill="white" stroke="#0E4E68" strokeWidth="0.5" strokeOpacity="0.2" className="drop-shadow-sm" />
+            <text textAnchor="middle" y="4" fill="#0E4E68" fontSize="8" fontWeight="900" letterSpacing="0.1em" opacity="0.5" style={{ fontFamily: 'Inter, sans-serif' }}>{item.label}</text>
+            <line x1="45" y1="0" x2="85" y2="0" stroke="#0E4E68" strokeWidth="0.5" strokeDasharray="3 3" opacity="0.3" />
+            <circle cx="110" cy="0" r="28" fill="white" stroke="#0E4E68" strokeWidth="0.5" strokeOpacity="0.1" className="drop-shadow-sm" />
+            <text x="110" textAnchor="middle" y="-2" fill="#0E4E68" fontSize="6" fontWeight="900" letterSpacing="0.1em" opacity="0.4">{lang === 'EN' ? 'FOCAL' : 'PUNTO'}</text>
+            <text x="110" textAnchor="middle" y="6" fill="#0E4E68" fontSize="6" fontWeight="900" letterSpacing="0.1em" opacity="0.4">{lang === 'EN' ? 'POINT' : 'FOCAL'}</text>
+            <path d="M 138 0 Q 200 0 240 0" fill="none" stroke="#1A8E9F" strokeWidth="1" strokeDasharray="5 5" opacity="0.3" />
+          </g>
+        ))}
+      </g>
 
-        {/* 2. Operational VERTICAL Bars (CX & OPS) */}
-        <g transform="translate(500, 0)">
-          {[
-            { x: 0, label: 'CX', sub: 'ORCHESTRATION' },
-            { x: 150, label: 'OPS', sub: 'FOUNDATION' }
-          ].map((col, i) => (
-            <g key={i} transform={`translate(${col.x}, 0)`}>
-               {/* Vertical Bar Body - Improved contrast using brand navy with slight tint */}
-               <rect 
-                 x="-25" y="60" width="50" height="420" 
-                 rx="25" 
-                 fill="#0E4E68" fillOpacity="0.07"
-                 stroke="white" strokeWidth="1.5" strokeOpacity="0.8"
-                 className="drop-shadow-[0_2px_10px_rgba(0,0,0,0.03)]"
-               />
-               {/* Column Label */}
-               <text x="0" y="10" textAnchor="middle" fill="#0E4E68" fontSize="11" fontWeight="900" letterSpacing="0.2em">{col.label}</text>
-               <text x="0" y="24" textAnchor="middle" fill="#0E4E68" fontSize="7" fontWeight="500" letterSpacing="0.1em" opacity="0.6">{col.sub}</text>
-            </g>
-          ))}
-        </g>
+      {/* Operational Vertical Columns (Center-Right) */}
+      <g transform="translate(680, 0)">
+        {[
+          { x: 0, label: 'CX', sub: lang === 'EN' ? 'ORCHESTRATION' : 'ORQUESTACIÓN' },
+          { x: 140, label: 'OPS', sub: lang === 'EN' ? 'FOUNDATION' : 'CIMIENTO' }
+        ].map((col, i) => (
+          <g key={i} transform={`translate(${col.x}, 0)`}>
+            <rect x="-30" y="60" width="60" height="420" rx="30" fill="#0E4E68" fillOpacity="0.05" stroke="white" strokeWidth="1.5" strokeOpacity="0.8" className="drop-shadow-sm" />
+            <text x="0" y="30" textAnchor="middle" fill="#0E4E68" fontSize="12" fontWeight="900" letterSpacing="0.2em" style={{ fontFamily: 'Inter, sans-serif' }}>{col.label}</text>
+            <text x="0" y="45" textAnchor="middle" fill="#0E4E68" fontSize="8" fontWeight="500" letterSpacing="0.1em" opacity="0.6" style={{ fontFamily: 'Inter, sans-serif' }}>{col.sub}</text>
+          </g>
+        ))}
+      </g>
 
-        {/* 3. Business Units Background Columns (Dashed Rects) */}
-        <g transform="translate(500, 0)">
-          {[
-            { x: 320, label: 'RETAIL', sub: 'BUSINESS UNIT' },
-            { x: 470, label: 'CORPORATE', sub: 'BUSINESS UNIT' }
-          ].map((col, i) => (
-            <g key={i} transform={`translate(${col.x}, 0)`}>
-               <rect 
-                 x="-60" y="60" width="120" height="420" 
-                 rx="12" 
-                 fill="#1A8E9F" 
-                 fillOpacity="0.04" 
-                 stroke="#1A8E9F" 
-                 strokeWidth="1" 
-                 strokeDasharray="4 4" 
-                 strokeOpacity="0.4" 
-               />
-               <text x="0" y="10" textAnchor="middle" fill="#D8614E" fontSize="10" fontWeight="900" letterSpacing="0.2em">{col.label}</text>
-               <text x="0" y="24" textAnchor="middle" fill="#0E4E68" fontSize="7" fontWeight="500" letterSpacing="0.1em" opacity="0.6">{col.sub}</text>
-               
-               {/* Product Teams & Channels labels at the bottom of the column */}
-               <g transform="translate(0, 455)">
-                 <text textAnchor="middle" fill="#0E4E68" fontSize="7" fontWeight="900" letterSpacing="0.1em" opacity="0.5">PRODUCT TEAMS</text>
-                 <text textAnchor="middle" y="10" fill="#0E4E68" fontSize="7" fontWeight="900" letterSpacing="0.1em" opacity="0.5">& CHANNELS</text>
-               </g>
+      {/* Business Units (Far Right) */}
+      <g transform="translate(680, 0)">
+        {[
+          { x: 300, label: lang === 'EN' ? 'RETAIL' : 'MINORISTA' },
+          { x: 460, label: lang === 'EN' ? 'CORPORATE' : 'CORPORATIVO' }
+        ].map((col, i) => (
+          <g key={i} transform={`translate(${col.x}, 0)`}>
+            <rect x="-65" y="60" width="130" height="420" rx="16" fill="#1A8E9F" fillOpacity="0.03" stroke="#1A8E9F" strokeWidth="1" strokeDasharray="4 4" strokeOpacity="0.3" />
+            <text x="0" y="30" textAnchor="middle" fill="#D8614E" fontSize="11" fontWeight="900" letterSpacing="0.2em" style={{ fontFamily: 'Inter, sans-serif' }}>{col.label}</text>
+            <text x="0" y="45" textAnchor="middle" fill="#0E4E68" fontSize="8" fontWeight="500" letterSpacing="0.1em" opacity="0.5" style={{ fontFamily: 'Inter, sans-serif' }}>{lang === 'EN' ? 'BUSINESS UNIT' : 'UNIDAD DE NEGOCIO'}</text>
+            <g transform="translate(0, 460)">
+              <text textAnchor="middle" fill="#0E4E68" fontSize="8" fontWeight="900" letterSpacing="0.1em" opacity="0.4" style={{ fontFamily: 'Inter, sans-serif' }}>{lang === 'EN' ? 'PRODUCT TEAMS' : 'EQUIPOS DE PRODUCTO'}</text>
+              <text textAnchor="middle" y="10" fill="#0E4E68" fontSize="8" fontWeight="900" letterSpacing="0.1em" opacity="0.4" style={{ fontFamily: 'Inter, sans-serif' }}>{lang === 'EN' ? '& CHANNELS' : 'Y CANALES'}</text>
             </g>
-          ))}
-        </g>
+          </g>
+        ))}
+      </g>
 
-        {/* 4. Horizontal Discipline Rows */}
-        <g transform="translate(0, 250)">
-          {[
-            { y: -90, label: 'PRODUCT DESIGN' },
-            { y: -30, label: 'CONTENT DESIGN' },
-            { y: 30, label: 'RESEARCH' },
-            { y: 90, label: 'DESIGN OPS' }
-          ].map((row, i) => (
-            <g key={i} transform={`translate(0, ${row.y})`}>
-               {/* Row Bar - Improved contrast using brand navy with slight tint */}
-               <rect 
-                 x="250" y="-22" width="800" height="44" 
-                 rx="22" 
-                 fill="#0E4E68" fillOpacity="0.07"
-                 stroke="white" strokeWidth="1.5" strokeOpacity="0.8"
-                 className="drop-shadow-[0_2px_10px_rgba(0,0,0,0.03)]"
-               />
-               {/* Row Label */}
-               <text x="280" y="4" fill="#0E4E68" fontSize="11" fontWeight="900" letterSpacing="0.3em">{row.label}</text>
-               
-               {/* Intersections (Dots at crossings) */}
-               {[500, 650, 820, 970].map(x => (
-                 <circle key={x} cx={x} cy="0" r="5" fill="#1A8E9F" stroke="white" strokeWidth="2" className="drop-shadow-sm" />
-               ))}
-            </g>
-          ))}
-        </g>
+      {/* Horizontal Operational Rows - Restored and adjusted to avoid overlap */}
+      <g transform="translate(0, 250)">
+        {[
+          { y: -100, label: lang === 'EN' ? 'PRODUCT DESIGN' : 'DISEÑO DE PRODUCTO' },
+          { y: -40, label: lang === 'EN' ? 'CONTENT DESIGN' : 'DISEÑO DE CONTENIDO' },
+          { y: 40, label: lang === 'EN' ? 'RESEARCH' : 'INVESTIGACIÓN' },
+          { y: 100, label: lang === 'EN' ? 'DESIGN OPS' : 'OPERACIONES DE DISEÑO' }
+        ].map((row, i) => (
+          <g key={i} transform={`translate(0, ${row.y})`}>
+            {/* Start at 430 to clear the COE circle (which ends at 420) */}
+            <rect x="430" y="-22" width="720" height="44" rx="22" fill="#0E4E68" fillOpacity="0.06" stroke="white" strokeWidth="1.5" strokeOpacity="0.8" className="drop-shadow-sm" />
+            <text x="460" y="4" fill="#0E4E68" fontSize="11" fontWeight="900" letterSpacing="0.3em" style={{ fontFamily: 'Inter, sans-serif' }}>{row.label}</text>
+            {/* Connection dots with the vertical pillars */}
+            {[680, 820, 980, 1140].map(x => (
+              <circle key={x} cx={x} cy="0" r="5" fill="#1A8E9F" stroke="white" strokeWidth="2" className="drop-shadow-sm" />
+            ))}
+          </g>
+        ))}
+      </g>
 
-        {/* 5. COE CX Nucleus */}
-        <g transform="translate(180, 250)">
-          <circle r="110" fill="#1A4A63" stroke="white" strokeWidth="5" className="drop-shadow-2xl" />
-          <circle r="95" fill="none" stroke="white" strokeWidth="0.5" strokeOpacity="0.2" />
-          <text textAnchor="middle" y="14" fill="white" fontSize="42" fontWeight="900" letterSpacing="-0.02em">COE CX</text>
-          <circle cx="60" cy="-40" r="8" fill="#D8614E" />
-        </g>
-      </svg>
-    </div>
+      {/* Central COE CX Nucleus - Positioned to barely overlap the bars container but not the text */}
+      <g transform="translate(345, 250)">
+        <circle r="105" fill="#1A4A63" stroke="white" strokeWidth="5" className="shadow-2xl" />
+        <circle r="92" fill="none" stroke="white" strokeWidth="0.5" strokeOpacity="0.2" />
+        <text textAnchor="middle" y="12" fill="white" fontSize="38" fontWeight="900" letterSpacing="-0.02em" style={{ fontFamily: 'Playfair Display, serif' }}>COE CX</text>
+        <circle cx="55" cy="-45" r="7" fill="#D8614E" />
+      </g>
+    </svg>
   </div>
 );
 
 // --- MAIN APP COMPONENT ---
 
 export function CaseStudy() {
+  const [lang, setLang] = useState<'EN' | 'ES'>('EN');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedDoc, setSelectedDoc] = useState<any>(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Open by default as requested
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  
+  const slides = slidesData.map(s => {
+    const langData = (s as any)[lang] || s['EN'];
+    return {
+      ...s,
+      ...langData,
+      sidebarLabel: (s.sidebarLabel as any)[lang] || (s.sidebarLabel as any)['EN']
+    };
+  });
+
   const slide = slides[currentSlide] || slides[0];
 
   const handleSelectDoc = (doc: any) => {
     setSelectedDoc(doc);
-    setSidebarCollapsed(false); // Reset to open when selecting a new document
+    // Si es un diagrama o estamos en móvil, colapsamos el sidebar por defecto para priorizar la visualización
+    if (doc.id?.includes('diagram') || window.innerWidth < 768) {
+      setSidebarCollapsed(true);
+    } else {
+      setSidebarCollapsed(false);
+    }
   };
 
   const paginate = useCallback((newDirection: number) => {
@@ -379,25 +531,28 @@ export function CaseStudy() {
       if (next >= slides.length) return slides.length - 1;
       return next;
     });
-  }, []);
+  }, [slides.length]);
 
-  const handlePrint = () => {
-    window.print();
-  };
+  const handlePrint = () => window.print();
 
   return (
     <div className="min-h-screen selection:bg-[#0E4E68]/10 text-[#0E4E68] overflow-x-hidden relative flex flex-col">
       <BackgroundMotion />
-      
-      {/* Texture de Grano Físico Global */}
       <div className="fixed inset-0 pointer-events-none z-[1000] opacity-[0.04] mix-blend-multiply" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }} />
       
-      <GlobalHeader logoName="Viviana Fernández" />
+      <GlobalHeader logoName="Viviana Fernández" lang={lang} onLangChange={setLang} />
 
       <main className="pt-[60px] lg:pt-[75px] min-h-screen flex flex-col relative z-20">
-        <AnimatePresence>
-          <motion.div key={currentSlide} className="w-full flex-grow flex flex-col">
-            <SlideRenderer slide={slide} onSelectDoc={handleSelectDoc} onPrint={handlePrint} />
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={`${currentSlide}-${lang}`} 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4 }}
+            className="w-full flex-grow flex flex-col"
+          >
+            <SlideRenderer slide={slide} lang={lang} onSelectDoc={handleSelectDoc} onPrint={handlePrint} />
           </motion.div>
         </AnimatePresence>
       </main>
@@ -405,175 +560,177 @@ export function CaseStudy() {
       <SlideFooter 
         current={currentSlide} total={slides.length} label={slide.sidebarLabel} 
         onPrev={() => paginate(-1)} onNext={() => paginate(1)} onRestart={() => setCurrentSlide(0)}
+        onGoTo={(index: number) => setCurrentSlide(index)}
+        lang={lang}
       />
 
       <AnimatePresence>
         {selectedDoc && (
-          <div className="fixed inset-0 z-[2000] bg-[#FBF8F1] flex flex-col overflow-hidden">
-            {/* High-End Header */}
-            <header className="h-[100px] lg:h-[120px] px-8 lg:px-16 bg-white flex justify-between items-center relative z-[60] border-b border-[#0E4E68]/5">
-               <div className="flex flex-col gap-1">
-                  <span className={`${Typography.body} text-[10px] lg:text-[11px] font-black text-[#1A8E9F] uppercase tracking-[0.3em]`}>
-                    {selectedDoc.tag}
-                  </span>
-                  <h2 className={`${Typography.title} text-[28px] lg:text-[42px] text-[#0E4E68] leading-none tracking-tight`}>
-                    {selectedDoc.title}
-                  </h2>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            className="fixed inset-0 z-[2000] bg-[#FBF8F1] flex flex-col overflow-hidden"
+          >
+            <header className="min-h-[100px] lg:h-[120px] px-6 lg:px-16 bg-white flex justify-between items-center relative z-[60] border-b border-[#0E4E68]/5 py-4">
+               <div className="flex flex-col gap-1 pr-4">
+                  <CardLabel className="text-[#1A8E9F] uppercase tracking-[0.3em] text-[8px] lg:text-[10px]">{selectedDoc.tag}</CardLabel>
+                  <h2 className={`${Typography.title} text-[20px] lg:text-[42px] text-[#0E4E68] leading-tight tracking-tight`}>{selectedDoc.title}</h2>
                </div>
-               
-               <div className="flex items-center gap-4 lg:gap-6">
-                 {/* Sidebar Toggle - Elegant Pill */}
-                 <button 
-                   onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                   className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#0E4E68]/10 hover:border-[#1A8E9F] hover:bg-[#1A8E9F]/5 transition-all text-[#0E4E68]/60 group"
-                 >
-                   <SafeIcon icon={sidebarCollapsed ? "BookOpen" : "ChevronRight"} size={16} className="group-hover:text-[#1A8E9F]" />
-                   <span className="text-[11px] font-bold tracking-widest uppercase">{sidebarCollapsed ? "Show Notes" : "Hide Notes"}</span>
-                 </button>
-
-                 <button 
-                   onClick={() => setSelectedDoc(null)}
-                   className="w-12 h-12 lg:w-14 lg:h-14 rounded-full border border-[#0E4E68]/10 flex items-center justify-center hover:bg-[#D8614E] hover:border-[#D8614E] hover:text-white transition-all duration-500 text-[#0E4E68]/40"
-                 >
-                   <SafeIcon icon="X" size={24} />
-                 </button>
+               <div className="flex items-center gap-3 lg:gap-6 shrink-0">
+                  {!selectedDoc.id?.includes('diagram') && (
+                    <button 
+                      onClick={() => setSidebarCollapsed(!sidebarCollapsed)} 
+                      className={`items-center gap-2 lg:gap-3 px-3 lg:px-6 py-2 lg:py-2.5 rounded-full bg-white border border-[#1A8E9F] hover:bg-[#1A8E9F]/5 transition-all duration-300 ${!sidebarCollapsed ? 'hidden md:flex' : 'flex'}`}
+                    >
+                      <SafeIcon icon={sidebarCollapsed ? "BookOpen" : "EyeOff"} size={14} className="text-[#1A8E9F]" />
+                      <span className={`${Typography.body} text-[9px] lg:text-[11px] font-normal tracking-[0.2em] uppercase text-[#0E4E68]`}>
+                        {lang === 'EN' ? (sidebarCollapsed ? "Open Notes" : "Hide Notes") : (sidebarCollapsed ? "Ver Notas" : "Ocultar Notas")}
+                      </span>
+                    </button>
+                  )}
+                  <button onClick={() => setSelectedDoc(null)} className="w-10 h-10 lg:w-14 lg:h-14 rounded-full bg-white border border-[#0E4E68]/10 flex items-center justify-center text-[#0E4E68] hover:bg-[#0E4E68] hover:text-white transition-all duration-500 shadow-sm">
+                    <SafeIcon icon="X" size={18} />
+                  </button>
                </div>
             </header>
-            
-            <div className="flex-grow flex overflow-hidden relative">
-               {/* Main Viewer Area with Advanced Zoom & Pan */}
-               <div className="flex-grow bg-[#FBF8F1] relative overflow-hidden group/viewer">
-                  <TransformWrapper
-                    initialScale={1}
-                    minScale={0.5}
-                    maxScale={4}
+
+            <div className="flex-grow flex relative overflow-hidden">
+               <div className="flex-grow bg-[#F3F1EA] overflow-hidden relative flex items-center justify-center">
+                   <TransformWrapper 
+                    key={selectedDoc.id}
+                    initialScale={1} 
+                    minScale={0.5} 
+                    maxScale={8} 
                     centerOnInit={true}
+                    limitToBounds={false}
+                    panning={{ disabled: false, velocityDisabled: false }}
                     wheel={{ step: 0.1 }}
-                    doubleClick={{ disabled: false }}
                   >
-                    {({ zoomIn, zoomOut, resetTransform }: any) => (
-                      <>
-                        {/* Zoom Controls Overlay */}
-                        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-[70] flex items-center gap-2 p-2 bg-white/80 backdrop-blur-xl rounded-full border border-[#0E4E68]/10 shadow-2xl opacity-0 group-hover/viewer:opacity-100 transition-opacity duration-300">
-                           <button onClick={() => zoomOut()} className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-[#0E4E68]/5 text-[#0E4E68]">
-                              <SafeIcon icon="Minus" size={18} />
-                           </button>
-                           <div className="w-px h-6 bg-[#0E4E68]/10 mx-1" />
-                           <button onClick={() => resetTransform()} className="px-4 h-10 rounded-full flex items-center justify-center hover:bg-[#0E4E68]/5 text-[11px] font-bold text-[#0E4E68] tracking-widest uppercase">
-                              Reset
-                           </button>
-                           <div className="w-px h-6 bg-[#0E4E68]/10 mx-1" />
-                           <button onClick={() => zoomIn()} className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-[#0E4E68]/5 text-[#0E4E68]">
-                              <SafeIcon icon="Plus" size={18} />
-                           </button>
+                    {({ zoomIn, zoomOut, resetTransform }) => (
+                      <div className="relative w-full h-full flex flex-col">
+                        {/* Floating Zoom Controls */}
+                        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-[90] flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-xl rounded-full border border-[#0E4E68]/10 shadow-xl pointer-events-auto">
+                          <button 
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); zoomOut(); }} 
+                            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#1A8E9F]/10 text-[#0E4E68] transition-colors"
+                          >
+                            <SafeIcon icon="Minus" size={18} />
+                          </button>
+                          <div className="w-px h-4 bg-[#0E4E68]/10 mx-1" />
+                          <button 
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); resetTransform(); }} 
+                            className={`${Typography.body} text-[10px] uppercase tracking-widest px-3 hover:text-[#1A8E9F] transition-colors`}
+                          >
+                            {lang === 'EN' ? 'Reset' : 'Reiniciar'}
+                          </button>
+                          <div className="w-px h-4 bg-[#0E4E68]/10 mx-1" />
+                          <button 
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); zoomIn(); }} 
+                            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#1A8E9F]/10 text-[#0E4E68] transition-colors"
+                          >
+                            <SafeIcon icon="Plus" size={18} />
+                          </button>
                         </div>
 
-                        {/* Instruction Tooltip */}
-                        <div className="absolute top-8 left-1/2 -translate-x-1/2 z-[70] pointer-events-none opacity-0 group-hover/viewer:opacity-100 transition-opacity duration-500 delay-300">
-                           <div className="px-5 py-2 rounded-full bg-[#0E4E68]/80 text-white backdrop-blur-md text-[10px] font-bold tracking-[0.2em] uppercase flex items-center gap-3">
-                              <SafeIcon icon="MousePointer2" size={12} />
-                              Drag to pan · Scroll to zoom
-                           </div>
-                        </div>
-
-                        <TransformComponent
-                          wrapperStyle={{ width: "100%", height: "100%", cursor: "grab" }}
-                          contentStyle={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
+                        <TransformComponent 
+                          wrapperClass="!w-full !h-full !max-h-full !max-w-full cursor-grab active:cursor-grabbing" 
+                          contentClass="flex items-center justify-center min-w-full min-h-full"
                         >
-                          <div className="relative p-12 lg:p-24 flex items-center justify-center min-w-full min-h-full">
-                            <motion.img 
-                              layoutId={`img-${selectedDoc.id}`}
-                              src={selectedDoc.image} 
-                              className="max-w-[90vw] lg:max-w-[80vw] h-auto shadow-[0_60px_150px_rgba(14,78,104,0.15)] rounded-[40px] border border-white/80 pointer-events-auto" 
-                              style={{ maxHeight: '85vh' }}
-                            />
-                          </div>
+                           <div className="flex items-center justify-center p-20 md:p-40">
+                              {selectedDoc.id === 'strategy-diagram' ? (
+                                <div className="bg-white/40 backdrop-blur-3xl rounded-[32px] lg:rounded-[48px] p-8 lg:p-16 shadow-2xl border border-white/60 origin-center">
+                                  <div style={{ width: window.innerWidth < 768 ? '800px' : '1200px' }}>
+                                    <StrategyDiagram lang={lang} />
+                                  </div>
+                                </div>
+                              ) : selectedDoc.id === 'challenge-diagram' ? (
+                                <div className="bg-white/40 backdrop-blur-3xl rounded-[32px] lg:rounded-[48px] p-8 lg:p-16 shadow-2xl border border-white/60 origin-center">
+                                  <div style={{ width: window.innerWidth < 768 ? '700px' : '1000px' }}>
+                                    <ChallengeDiagram lang={lang} />
+                                  </div>
+                                </div>
+                              ) : (
+                                <img 
+                                  src={selectedDoc.image} 
+                                  className="max-w-[90vw] max-h-[80vh] w-auto h-auto object-contain shadow-2xl rounded-sm origin-center" 
+                                  alt={selectedDoc.title} 
+                                  onDragStart={(e) => e.preventDefault()}
+                                />
+                              )}
+                           </div>
                         </TransformComponent>
-                      </>
+                      </div>
                     )}
                   </TransformWrapper>
                </div>
 
-               {/* Sidebar - Overlay Layer */}
                <AnimatePresence>
-                 {!sidebarCollapsed && (
-                   <motion.aside 
-                     initial={{ x: "100%", opacity: 0 }}
-                     animate={{ x: 0, opacity: 1 }}
-                     exit={{ x: "100%", opacity: 0 }}
-                     transition={{ type: "spring", damping: 28, stiffness: 220 }}
-                     className="absolute right-0 top-0 bottom-0 w-full md:w-[450px] lg:w-[550px] bg-white/95 backdrop-blur-3xl border-l border-[#0E4E68]/5 z-[80] overflow-y-auto shadow-[-40px_0_100px_rgba(0,0,0,0.08)]"
-                   >
-                     <div className="p-10 lg:p-16 space-y-16">
+                  {!sidebarCollapsed && !selectedDoc.id?.includes('diagram') && (
+                    <motion.aside initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} className="absolute right-0 top-0 bottom-0 w-full md:w-[450px] lg:w-[550px] bg-white/95 backdrop-blur-3xl border-l border-[#0E4E68]/5 z-[80] overflow-y-auto p-8 lg:p-14 space-y-12">
+                        <button onClick={() => setSidebarCollapsed(true)} className="md:hidden flex items-center gap-2 text-[#1A8E9F] mb-6">
+                          <SafeIcon icon="ArrowLeft" size={14} />
+                          <span className="text-[10px] font-normal uppercase tracking-widest">{lang === 'EN' ? "Back to Image" : "Volver a la Imagen"}</span>
+                        </button>
                         <div className="space-y-6">
-                          <CardLabel>Project Context</CardLabel>
-                          <BodyText size="lg" className="text-[#0E4E68]/80 leading-relaxed font-medium">
-                            {selectedDoc.text}
-                          </BodyText>
+                          <CardLabel>{lang === 'EN' ? "Project Context" : "Contexto del Proyecto"}</CardLabel>
+                          <h3 className={`${Typography.title} text-[28px] lg:text-[34px] text-[#0E4E68] leading-[1.15] tracking-tight`}>{selectedDoc.text}</h3>
+                          {selectedDoc.description && <p className={`${Typography.body} text-[16px] lg:text-[17px] text-[#2F3B40] leading-relaxed whitespace-pre-line`}>{selectedDoc.description}</p>}
+                          {selectedDoc.quote && <p className={`${Typography.body} text-[15px] lg:text-[16px] text-[#1A8E9F]/80 italic border-l-2 border-[#1A8E9F]/20 pl-6`}>"{selectedDoc.quote}"</p>}
                         </div>
-
-                        <div className="space-y-10">
-                          <CardLabel>Strategic Insights</CardLabel>
-                          <div className="space-y-8">
+                        <div className="space-y-8">
+                          <CardLabel>{lang === 'EN' ? "Strategic Insights" : "Insights Estratégicos"}</CardLabel>
+                          <div className="space-y-5">
                             {selectedDoc.insights?.map((insight: string, idx: number) => (
-                              <motion.div 
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.1 * idx }}
-                                key={idx} 
-                                className="flex gap-8 items-start group"
-                              >
-                                <div className="mt-3 w-2.5 h-2.5 rounded-full bg-[#D8614E] shrink-0 group-hover:scale-150 transition-transform duration-500" />
-                                <p className={`${Typography.body} text-[17px] lg:text-[19px] text-[#0E4E68] leading-snug font-medium tracking-tight`}>
-                                  {insight}
-                                </p>
-                              </motion.div>
+                              <div key={idx} className="flex gap-5 items-start group">
+                                <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#D8614E]/60 group-hover:bg-[#D8614E] transition-colors shrink-0" />
+                                <p className={`${Typography.body} text-[15px] lg:text-[16px] text-[#2F3B40] leading-snug tracking-tight font-normal`}>{insight}</p>
+                              </div>
                             ))}
                           </div>
                         </div>
-
-                        <div className="pt-16 border-t border-[#0E4E68]/10">
-                           <div className="bg-[#1A8E9F]/5 p-8 rounded-[32px] border border-[#1A8E9F]/10 space-y-4">
+                        <div className="pt-10 border-t border-[#0E4E68]/10">
+                           <div className="bg-[#1A8E9F]/5 p-6 rounded-[24px] border border-[#1A8E9F]/10 space-y-4">
                               <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-2xl bg-[#1A8E9F] flex items-center justify-center text-white">
-                                  <SafeIcon icon="Zap" size={18} />
-                                </div>
-                                <p className={`${Typography.body} text-[11px] font-black text-[#1A8E9F] uppercase tracking-[0.2em]`}>VF Methodology</p>
+                                <div className="w-8 h-8 rounded-xl bg-[#1A8E9F] flex items-center justify-center text-white"><SafeIcon icon="Zap" size={14} /></div>
+                                <p className={`${Typography.body} text-[10px] font-normal text-[#1A8E9F] uppercase tracking-[0.2em]`}>{lang === 'EN' ? "VF Methodology" : "Metodología VF"}</p>
                               </div>
-                              <p className={`${Typography.body} text-[15px] text-[#0E4E68]/60 italic leading-relaxed`}>
-                                Framework designed to evaluate the maturity of CX/UX teams and identify improvement areas across collaboration and consistency.
-                              </p>
+                              <p className={`${Typography.body} text-[14px] text-[#2F3B40] italic leading-relaxed`}>{selectedDoc.methodology}</p>
                            </div>
                         </div>
-                     </div>
-                   </motion.aside>
-                 )}
+                    </motion.aside>
+                  )}
                </AnimatePresence>
             </div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
   );
 }
 
-function SlideRenderer({ slide, onSelectDoc, onPrint }: any) {
+function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
   const { id } = slide;
-  const [zoomDiagram, setZoomDiagram] = useState<boolean>(false);
+  const [activeBlock, setActiveBlock] = useState<number | null>(null);
 
-  const toggleZoom = () => setZoomDiagram(!zoomDiagram);
+  useEffect(() => {
+    setActiveBlock(null);
+  }, [id, lang]);
 
   if (id === 'cover') {
     return (
       <FullCenteredLayout centered={true} className="!pt-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 w-full gap-8 items-center max-w-[1100px] mx-auto">
           <div className="col-span-1 lg:col-span-4 lg:border-r border-[#0E4E68]/10 lg:pr-16 text-center lg:text-right">
-            <p className={`${Typography.body} text-[11px] font-black tracking-[0.4em] uppercase mb-4 text-[#D8614E]`}>{slide.year}</p>
-            <p className={`${Typography.body} text-[14px] font-semibold text-[#0E4E68] tracking-tight leading-relaxed`}>{slide.metadata}</p>
+            <p className={`${Typography.body} text-[11px] font-normal tracking-[0.4em] uppercase mb-4 text-[#D8614E]`}>{slide.year}</p>
+            <p className={`${Typography.body} text-[14px] font-normal text-[#1A8E9F] tracking-tight leading-relaxed`}>{slide.metadata}</p>
           </div>
           <div className="col-span-1 lg:col-span-8 lg:pl-16 text-center lg:text-left">
             <Heading className="mb-8 !text-[clamp(2.5rem,6vw,4rem)] leading-[1.1]">
-              Experience <br /> <span className="text-[#1A8E9F] italic font-normal">Center of Excellence</span>
+              {lang === 'EN' ? <>Experience <br /> <span className="text-[#1A8E9F] italic font-normal">Center of Excellence</span></> : <>Centro de Excelencia <br /> <span className="text-[#1A8E9F] italic font-normal">de Experiencia</span></>}
             </Heading>
             <BodyText size="lg" className="max-w-[450px] mx-auto lg:mx-0 opacity-80">{slide.subtitle}</BodyText>
           </div>
@@ -584,245 +741,215 @@ function SlideRenderer({ slide, onSelectDoc, onPrint }: any) {
 
   if (id === 'context') {
     return (
-      <SplitLayout 
-        ratio="5:7"
-        centered={true}
-        left={
-          <div className="lg:pr-10 max-w-[400px]">
-            <SectionHeader category={slide.category} title={slide.title} />
-          </div>
-        }
-        right={
-          <div className="space-y-8 lg:space-y-10 lg:pl-16 border-l border-[#0E4E68]/10">
-            {slide.content.split('\n\n').map((para: string, idx: number) => (
-              <BodyText key={idx} size="lg" className="leading-relaxed text-[#0E4E68]/80 text-[16px] lg:text-[18px]">
-                {para}
-              </BodyText>
-            ))}
-          </div>
-        }
+      <SplitLayout ratio="5:7" centered={true} 
+        left={<div className="lg:pr-10 max-w-[400px]"><SectionHeader category={slide.category} title={slide.title} /></div>}
+        right={<div className="space-y-8 lg:space-y-10 lg:pl-16 border-l border-[#0E4E68]/10">
+          {(slide.content || "").split('\n\n').map((para: string, idx: number) => (<BodyText key={idx} size="md" className="leading-relaxed text-[#2F3B40] font-normal">{para}</BodyText>))}
+        </div>}
       />
     );
   }
 
-  if (id === 'challenge') {
+  if (id === 'challenge' || id === 'pillars') {
+    const isPillars = id === 'pillars';
     return (
-      <SplitLayout 
-        ratio="7:5"
-        centered={true}
-        className="!pt-[4vh] lg:!pt-[6vh]" 
-        left={
-          <div className="space-y-10 lg:space-y-12 pr-4">
-            <SectionHeader 
-              category={slide.category} 
-              title={slide.title} 
-              description={slide.introText} 
-              className="max-w-[800px]"
-            />
-            
-            {/* Arquitectura de Grilla 2x2 para Bullets - Optimización Vertical */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 lg:gap-y-12 pt-4">
-              {slide.missionBullets.map((bullet: any, i: number) => (
-                <div key={i} className="flex gap-6 group">
-                  <div className="w-[3px] h-12 lg:h-14 bg-[#0E4E68]/10 group-hover:bg-[#D8614E] transition-all duration-500 rounded-full shrink-0" />
-                  <div className="pt-0.5">
-                    <CardLabel className="mb-1.5 text-[10px] lg:text-[11px] text-[#1A8E9F] font-black tracking-[0.3em] uppercase opacity-80">{bullet.label}</CardLabel>
-                    <h3 className={`${Typography.title} text-[20px] lg:text-[24px] font-medium text-[#0E4E68] group-hover:text-[#1A8E9F] transition-colors mb-2 tracking-tight leading-tight`}>
-                      {bullet.text}
-                    </h3>
-                    <p className={`${Typography.body} text-[13px] lg:text-[14px] text-[#0E4E68]/60 leading-relaxed group-hover:text-[#0E4E68]/80 transition-colors`}>
-                      {i === 0 && "Navigating complex stakeholder ecosystems across four diverse banking entities."}
-                      {i === 1 && "Empowering decentralized product units with shared tools and expertise."}
-                      {i === 2 && "Bridging the gap between user needs and business objectives."}
-                      {i === 3 && "Building a scalable framework that grows without operational friction."}
-                    </p>
-                  </div>
+      <div className="w-full flex-grow flex flex-col items-center justify-center relative overflow-hidden px-6 lg:px-20 pt-16 pb-[200px] lg:pb-[240px]">
+        {isPillars && activeBlock !== null && (
+          <div onClick={() => setActiveBlock(null)} className="absolute inset-0 z-30 cursor-default" />
+        )}
+        <div className="w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center relative z-10">
+          <div className="lg:col-span-5 space-y-10 lg:pr-6 pt-0">
+            <div className="space-y-4">
+              <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[10px] text-[#1A8E9F] font-normal tracking-[0.2em]">{slide.category}</CardLabel></div>
+              <Heading level={2} className="text-[2.6rem] lg:text-[3.8rem] leading-[1.05] tracking-tighter">{slide.title}</Heading>
+            </div>
+            <div className="space-y-6 max-w-[520px]">
+              {(slide.introText || "").split('\n\n').map((para: string, idx: number) => (
+                <BodyText key={idx} size="md" className={`${idx === 0 ? 'text-[#2F3B40]' : 'text-[#2F3B40]/70 italic'} leading-relaxed font-normal`}>
+                  {para}
+                </BodyText>
+              ))}
+            </div>
+          </div>
+          <div className="lg:col-span-7 relative flex items-center justify-center">
+            <div className="w-full h-[350px] lg:h-[450px] relative flex items-center justify-center">
+              <div 
+                onClick={() => onSelectDoc({ 
+                  id: 'challenge-diagram', 
+                  title: lang === 'EN' ? 'The Fragmentation Barrier' : 'La barrera de la fragmentación',
+                  tag: lang === 'EN' ? 'CONTEXT' : 'CONTEXTO',
+                  text: slide.introText,
+                  methodology: lang === 'EN' ? 'Visual representation of multi-bank fragmentation.' : 'Representación visual de la fragmentación multi-banco.'
+                })}
+                className="scale-[0.65] lg:scale-[0.75] w-full h-full flex items-center justify-center transition-all duration-700 cursor-zoom-in group" 
+                style={{ filter: activeBlock !== null ? 'grayscale(0.6) opacity(0.15) blur(6px)' : 'none' }}
+              >
+                <ChallengeDiagram lang={lang} />
+                <div className="absolute top-10 right-10 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 backdrop-blur-md p-3 rounded-full border border-[#0E4E68]/10 text-[#0E4E68] shadow-sm">
+                  <LucideIcons.Maximize2 size={18} />
                 </div>
-              ))}
-            </div>
-
-            {/* Context Tags en la base */}
-            <div className="flex flex-wrap gap-2.5 pt-4">
-              {slide.contextPoints?.map((p: string, i: number) => (
-                 <div key={i} className="flex gap-2.5 items-center bg-white/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/60">
-                   <div className="w-1.5 h-1.5 rounded-full bg-[#D8614E]" />
-                   <p className={`${Typography.body} text-[10px] font-black text-[#0E4E68]/60 uppercase tracking-[0.25em]`}>{p}</p>
-                 </div>
-              ))}
-            </div>
-          </div>
-        }
-        right={
-          <div className="w-full h-full flex items-center justify-center lg:pl-6 relative">
-             <div className="w-full max-w-[650px] aspect-square relative">
-               {/* Pattern sutil de fondo para el diagrama */}
-               <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#0E4E68 1.5px, transparent 1.5px)', backgroundSize: '32px 32px' }} />
-               <ChallengeDiagram />
-             </div>
-          </div>
-        }
-      />
-    );
-  }
-
-  if (id === 'role') {
-    return (
-      <SplitLayout 
-        ratio="5:7"
-        centered={true}
-        left={
-          <div className="space-y-10 lg:space-y-12">
-            <SectionHeader category={slide.category} title={slide.title} description={slide.roleIntro} />
-            <div className="space-y-6 lg:space-y-8">
-              {slide.roleBullets.map((b: any, i: number) => (
-                <div key={i} className="flex gap-5 lg:gap-6 group">
-                  <div className="w-[3px] h-10 lg:h-12 bg-[#0E4E68]/10 group-hover:bg-[#D8614E] transition-all rounded-full shrink-0" />
-                  <div className="pt-0.5">
-                    <CardLabel className="mb-1 text-[9px] lg:text-[10px] text-[#1A8E9F] font-black tracking-[0.2em] uppercase opacity-80">{b.label}</CardLabel>
-                    <p className={`${Typography.title} text-[20px] lg:text-[24px] font-medium text-[#0E4E68] group-hover:text-[#1A8E9F] transition-colors mb-0.5 tracking-tight`}>{b.title}</p>
-                    <CardBody className="leading-snug text-[13px] lg:text-[15px] max-w-[90%] text-[#0E4E68]/70">{b.text}</CardBody>
-                  </div>
+              </div>
+              {isPillars && slide.missionBullets && (
+                <div className="absolute inset-0 pointer-events-none scale-90 lg:scale-100">
+                  {slide.missionBullets.map((bullet: any, i: number) => {
+                    const positions = ["top-[2%] left-[-5%]", "top-[2%] right-[-5%]", "bottom-[2%] left-[-5%]", "bottom-[2%] right-[-5%]"];
+                    return (
+                      <motion.div 
+                        key={i} 
+                        initial={{ opacity: 0, scale: 0.8 }} 
+                        animate={{ opacity: 1, scale: 1 }} 
+                        transition={{ delay: 0.4 + (i * 0.1) }}
+                        className={`absolute ${positions[i]} pointer-events-auto`}
+                      >
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setActiveBlock(activeBlock === i ? null : i); }}
+                          className={`w-[230px] lg:w-[270px] p-6 lg:p-7 rounded-[32px] border text-left transition-all duration-500 relative overflow-hidden ${
+                            activeBlock === i ? 'bg-[#0E4E68] border-[#0E4E68] shadow-2xl z-50 text-white' : 'bg-white/80 backdrop-blur-xl border-white hover:bg-white z-20 shadow-sm'
+                          }`}
+                        >
+                          <div className="flex justify-between items-start mb-4">
+                            <div className={`w-10 h-[2px] ${activeBlock === i ? 'bg-[#D8614E]' : 'bg-[#1A8E9F]'}`} />
+                            <LucideIcons.Plus size={18} className={`transition-transform duration-500 ${activeBlock === i ? 'rotate-45' : ''}`} />
+                          </div>
+                          <CardLabel className={`text-[10px] mb-1.5 uppercase ${activeBlock === i ? 'text-white/60' : 'text-[#1A8E9F]'}`}>{bullet.label}</CardLabel>
+                          <h4 className={`${Typography.title} text-[18px] lg:text-[21px] leading-tight`}>{bullet.text}</h4>
+                          <AnimatePresence>
+                            {activeBlock === i && (
+                              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                                <p className={`${Typography.body} text-[14px] text-white/80 mt-5 leading-relaxed italic border-t border-white/10 pt-5`}>"{bullet.subtext}"</p>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </button>
+                      </motion.div>
+                    );
+                  })}
                 </div>
-              ))}
+              )}
             </div>
           </div>
-        }
-        right={
-          <div className="grid grid-cols-6 grid-rows-6 gap-4 lg:gap-5 w-full aspect-[4/3] lg:h-[480px]">
-             <div className="col-span-4 row-span-4 rounded-[32px] lg:rounded-[40px] overflow-hidden shadow-2xl shadow-[#0E4E68]/5 border border-white/20">
-               <img src={slide.collage[0]} className="w-full h-full object-cover" />
-             </div>
-             <div className="col-span-2 row-span-3 rounded-[24px] lg:rounded-[32px] overflow-hidden shadow-xl shadow-[#0E4E68]/5 border border-white/20">
-               <img src={slide.collage[1]} className="w-full h-full object-cover" />
-             </div>
-             <div className="col-span-2 row-span-3 rounded-[24px] lg:rounded-[32px] bg-[#D8614E] p-6 lg:p-8 flex flex-col justify-end text-white shadow-lg shadow-[#D8614E]/20">
-                <p className={`${Typography.title} italic text-[18px] lg:text-[24px] leading-tight tracking-tight`}>50+ professionals. <br />4 banks. <br />One ecosystem.</p>
-             </div>
-             <div className="col-span-4 row-span-2 rounded-[24px] lg:rounded-[32px] overflow-hidden shadow-lg shadow-[#0E4E68]/5 border border-white/20">
-               <img src={slide.collage[2]} className="w-full h-full object-cover" />
-             </div>
-          </div>
-        }
-      />
+        </div>
+      </div>
     );
   }
 
   if (id === 'strategy') {
     return (
-      <FullCenteredLayout centered={true} className="!justify-start lg:!justify-center relative">
-        {/* Editorial Header */}
-        <header className="mb-2 lg:mb-4 shrink-0">
+      <FullCenteredLayout centered={true} className="!justify-start relative !pb-[180px] lg:!pb-[220px] !pt-6 lg:!pt-10">
+        <header className="mb-4 lg:mb-6 shrink-0 text-center w-full">
           <SectionHeader 
             category={slide.category} 
             title={slide.title} 
-            description="Building a shared operating system that allows independent banks to scale UX maturity."
+            description={slide.description} 
+            className="text-center"
+            descriptionClassName="mx-auto"
+            descriptionSize="md"
           />
         </header>
         
-        {/* Diagram Area - Re-balanced for breathing room */}
         <div 
-          className="w-full h-[28vh] lg:h-[32vh] flex items-center justify-center relative py-2 lg:py-3 min-h-0 cursor-zoom-in group/diagram transition-all duration-500 hover:bg-white/40 rounded-[40px]"
-          onClick={toggleZoom}
+          onClick={() => onSelectDoc({ 
+            id: 'strategy-diagram', 
+            title: lang === 'EN' ? 'Architecture of Convergence' : 'Arquitectura de convergencia',
+            tag: lang === 'EN' ? 'STRATEGY' : 'ESTRATEGIA',
+            text: slide.description,
+            methodology: lang === 'EN' ? 'Operating system for multi-bank scaling.' : 'Sistema operativo para escalado multi-banco.'
+          })}
+          className="w-full flex-none flex items-center justify-center relative py-2 lg:py-4 cursor-zoom-in group transition-all duration-700 h-[18vh] lg:h-[22vh] min-h-[200px]"
         >
-           <StrategyDiagram />
-           {/* Hint for zoom */}
-           <div className="absolute top-2 right-4 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-[#0E4E68]/10 flex items-center gap-2 opacity-0 group-hover/diagram:opacity-100 transition-all duration-300 shadow-sm translate-y-2 group-hover/diagram:translate-y-0">
-             <SafeIcon icon="Maximize2" size={14} className="text-[#1A8E9F]" />
-             <span className="text-[10px] font-black text-[#0E4E68] uppercase tracking-widest">Focus</span>
-           </div>
+          <div className="w-full h-full max-w-[650px] mx-auto transition-transform duration-700 group-hover:scale-[1.01]">
+            <StrategyDiagram lang={lang} />
+          </div>
+          <div className="absolute top-1/2 right-4 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 backdrop-blur-md p-2 rounded-full border border-[#0E4E68]/10 text-[#0E4E68] shadow-md">
+            <LucideIcons.Maximize2 size={14} />
+          </div>
         </div>
 
-        {/* Strategic Pillars - Re-balanced Spacing and Weight */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mt-4 lg:mt-6 shrink-0 relative z-10 w-full">
-          {slide.pillars.map((p: any, i: number) => (
-            <div key={i} className="bg-white/70 backdrop-blur-xl border border-white/80 p-4 lg:p-5 rounded-[24px] lg:rounded-[32px] transition-all duration-500 group hover:bg-white hover:-translate-y-1 hover:shadow-xl hover:shadow-[#0E4E68]/8 cursor-default flex flex-col h-full shadow-[0_4px_20px_rgba(14,78,104,0.04)]">
-              <div className="flex items-center gap-3 mb-2.5">
-                <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-xl bg-[#0E4E68]/5 flex items-center justify-center text-[#1A8E9F] group-hover:bg-[#1A8E9F] group-hover:text-white transition-all duration-500 shrink-0">
-                  <SafeIcon icon={p.icon} size={18} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 mt-4 lg:mt-6 shrink-0 relative z-10 w-full px-4 lg:px-0">
+          {slide.pillars?.map((p: any, i: number) => (
+            <motion.div 
+              key={i} 
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+              className="bg-white/40 backdrop-blur-[20px] border border-white/80 p-5 lg:p-6 rounded-[32px] lg:rounded-[38px] shadow-sm flex flex-col h-full hover:bg-white/90 transition-all duration-700 hover:-translate-y-1 group cursor-default relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1A8E9F]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+              <div className="relative z-10 space-y-2.5">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#1A8E9F]/10 flex items-center justify-center text-[#1A8E9F] group-hover:bg-[#1A8E9F] group-hover:text-white transition-all duration-500 shadow-inner shrink-0">
+                    <SafeIcon icon={p.icon} size={14} />
+                  </div>
+                  <h4 className={`${Typography.title} text-[15px] lg:text-[17px] font-normal text-[#0E4E68] group-hover:text-[#1A8E9F] transition-colors duration-500 leading-tight`}>{p.title}</h4>
                 </div>
-                <h4 className={`${Typography.title} text-[14px] lg:text-[17px] font-medium text-[#0E4E68] group-hover:text-[#1A8E9F] transition-colors tracking-tight leading-tight`}>{p.title}</h4>
+                <CardBody className="text-[11.5px] lg:text-[12.5px] leading-relaxed text-[#2F3B40] group-hover:text-[#2F3B40] transition-colors duration-500 font-normal">{p.text}</CardBody>
               </div>
-              
-              <div className="relative flex-grow">
-                <CardBody className="text-[11px] lg:text-[13px] leading-snug group-hover:text-[#0E4E68]/90 transition-all">
-                  {p.text}
-                </CardBody>
-              </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-
-        {/* ZOOM MODAL - Advanced Glassmorphism & Focus */}
-        <AnimatePresence>
-          {zoomDiagram && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] flex items-center justify-center p-6 lg:p-12"
-            >
-              {/* Ultra-Blur Background */}
-              <motion.div 
-                initial={{ backdropFilter: "blur(0px)" }}
-                animate={{ backdropFilter: "blur(32px)" }}
-                className="absolute inset-0 bg-[#FBF8F1]/80 cursor-zoom-out"
-                onClick={toggleZoom}
-              />
-              
-              {/* Diagram Container */}
-              <motion.div 
-                initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                className="relative w-full max-w-7xl aspect-video bg-white/40 backdrop-blur-md rounded-[48px] border border-white/80 shadow-[0_40px_100px_rgba(14,78,104,0.15)] p-8 lg:p-16 flex flex-col items-center justify-center"
-              >
-                {/* Close Trigger */}
-                <button 
-                  onClick={toggleZoom}
-                  className="absolute top-8 right-8 w-14 h-14 rounded-full bg-white border border-[#0E4E68]/10 flex items-center justify-center text-[#0E4E68] hover:text-[#D8614E] hover:rotate-90 transition-all duration-500 group shadow-lg"
-                >
-                  <SafeIcon icon="X" size={24} />
-                </button>
-
-                {/* Info Overlay */}
-                <div className="absolute top-10 left-12 max-w-md hidden lg:block">
-                   <CardLabel className="text-[#1A8E9F] mb-2">Detailed Architecture</CardLabel>
-                   <h3 className={`${Typography.title} text-[28px] lg:text-[36px] text-[#0E4E68] leading-tight tracking-tight`}>Experience Center of Excellence</h3>
-                </div>
-
-                <div className="w-full h-full p-4 lg:p-8">
-                  <StrategyDiagram />
-                </div>
-
-                {/* Escape hint */}
-                <div className="absolute bottom-8 text-[#0E4E68]/30 text-[10px] font-black uppercase tracking-[0.3em]">
-                  Press anywhere to return
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </FullCenteredLayout>
+    );
+  }
+
+  if (id === 'role') {
+    return (
+      <div className="w-full flex-grow flex flex-col items-center justify-center px-8 lg:px-20 py-4 lg:py-8 overflow-hidden pb-[180px]">
+        <div className="w-full max-w-[1500px] grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+          <div className="lg:col-span-5 flex flex-col justify-center space-y-8 lg:space-y-10">
+            <header className="space-y-4">
+              <div className="inline-block bg-[#1A8E9F]/5 px-3 py-1 rounded-full border border-[#1A8E9F]/15"><CardLabel className="text-[9px] text-[#1A8E9F] font-normal tracking-[0.25em] uppercase">{slide.category}</CardLabel></div>
+              <h2 className={`${Typography.title} text-[2.8rem] lg:text-[4.2rem] text-[#0E4E68] leading-[0.95] tracking-tight`}>{lang === 'EN' ? <>Architecting <br /> the System</> : <>Arquitecto <br /> del sistema</>}</h2>
+            </header>
+            <div className="space-y-6 lg:space-y-8">
+              <p className={`${Typography.body} text-[15px] lg:text-[17px] text-[#2F3B40] font-normal leading-relaxed max-w-[460px]`}>{slide.roleIntro}</p>
+              <div className="pt-6 border-t border-[#0E4E68]/10 space-y-6 lg:space-y-8">
+                <p className={`${Typography.body} text-[9px] lg:text-[10px] font-normal text-[#1A8E9F] tracking-[0.3em] uppercase opacity-80`}>{lang === 'EN' ? "I worked across three layers:" : "Trabajé en tres niveles:"}</p>
+                <div className="grid grid-cols-1 gap-5 lg:gap-6">
+                  {slide.roleBullets?.map((b: any, i: number) => (
+                    <div key={i} className="group flex gap-5 items-start">
+                      <span className={`${Typography.title} text-[15px] lg:text-[16px] text-[#D8614E] opacity-50 mt-0.5 italic`}>0{i+1}</span>
+                      <div className="space-y-0.5">
+                        <h4 className={`${Typography.title} text-[17px] lg:text-[19px] text-[#0E4E68] font-normal tracking-tight group-hover:text-[#1A8E9F] transition-colors`}>{b.title}</h4>
+                        <p className={`${Typography.body} text-[13px] lg:text-[14px] text-[#2F3B40] opacity-60 leading-snug`}>{b.text}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="lg:col-span-7 relative h-[500px] lg:h-[650px] flex items-center justify-center">
+            <div className="relative w-full h-full max-w-[650px]">
+              <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2 }} className="absolute top-[20%] left-0 w-[80%] aspect-[1.3] rounded-[48px] overflow-hidden shadow-2xl z-10 border border-white/40">
+                <img src={slide.collage[0]} className="w-full h-full object-cover" />
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 30, y: -20 }} whileInView={{ opacity: 1, x: 0, y: 0 }} transition={{ duration: 1, delay: 0.3 }} className="absolute top-[10%] right-[-5%] w-[45%] aspect-[0.75] rounded-[40px] overflow-hidden shadow-2xl z-20 border border-white/60">
+                <img src={slide.collage[1]} className="w-full h-full object-cover" />
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="absolute bottom-[0%] right-[-8%] w-[40%] lg:w-[45%] bg-[#D8614E] p-7 lg:p-10 rounded-[50px] shadow-2xl z-30 text-white">
+                <p className={`${Typography.title} italic text-[18px] lg:text-[22px] leading-[1.2] tracking-tight`}>{lang === 'EN' ? "50+ professionals. 4 banks. One ecosystem." : "50+ profesionales. 4 bancos. Un ecosistema."}</p>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 
   if (id === 'toolkit') {
     return (
-      <FullCenteredLayout centered={true} className="!pt-[4vh] lg:!pt-[6vh]">
-        <header className="mb-6 lg:mb-10 w-full">
-          <SectionHeader category={slide.category} title={slide.title} description={slide.description} />
-        </header>
-        <div className="mt-4 lg:mt-6 grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16 w-full items-start">
-           {slide.artifacts.map((art: any, i: number) => (
-             <div key={art.id} onClick={() => onSelectDoc(art)} className="group cursor-zoom-in">
-                <div className="relative aspect-[3/2] rounded-[32px] lg:rounded-[40px] overflow-hidden bg-[#F3F1EA] border border-[#0E4E68]/5 mb-5 shadow-sm group-hover:shadow-2xl group-hover:shadow-[#0E4E68]/10 transition-all duration-700">
+      <FullCenteredLayout centered={true} className="!pt-[4vh] lg:!pt-[6vh] !pb-[220px]">
+        <header className="mb-6 lg:mb-10 w-full"><SectionHeader category={slide.category} title={slide.title} description={slide.description} /></header>
+        <div className="mt-6 lg:mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-14 w-full max-w-[1100px] mx-auto items-start px-6 lg:px-0">
+           {slide.artifacts?.map((art: any, i: number) => (
+             <div key={art.id} onClick={() => onSelectDoc(art)} className="group cursor-zoom-in flex flex-col items-center text-center lg:text-left lg:items-start">
+                <div className="relative aspect-[4/3] w-full max-w-[320px] rounded-[32px] lg:rounded-[40px] overflow-hidden bg-[#F3F1EA] border border-[#0E4E68]/5 mb-6 shadow-sm hover:shadow-2xl transition-all duration-700 flex items-center justify-center">
                    <img src={art.image} className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105" alt={art.title} />
-                   <div className="absolute inset-0 bg-gradient-to-t from-[#0E4E68]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="space-y-2.5 px-2">
-                   <CardLabel className="text-[10px] text-[#1A8E9F] font-black tracking-[0.2em] uppercase">{art.tag}</CardLabel>
-                   <h4 className={`${Typography.title} text-[22px] lg:text-[26px] text-[#0E4E68] leading-tight tracking-tight group-hover:text-[#1A8E9F] transition-colors`}>{art.title}</h4>
-                   <CardBody className="text-[13px] lg:text-[14px] leading-relaxed text-[#0E4E68]/60">{art.text}</CardBody>
+                <div className="space-y-2.5 px-2 max-w-[320px]">
+                   <CardLabel className="text-[#1A8E9F] uppercase">{art.tag}</CardLabel>
+                   <h4 className={`${Typography.title} text-[20px] lg:text-[24px] text-[#0E4E68] leading-tight tracking-tight group-hover:text-[#1A8E9F] transition-colors`}>{art.title}</h4>
+                   <CardBody className="text-[12.5px] lg:text-[13.5px] leading-relaxed text-[#0E4E68]/60">{art.text}</CardBody>
                 </div>
              </div>
            ))}
@@ -831,67 +958,84 @@ function SlideRenderer({ slide, onSelectDoc, onPrint }: any) {
     );
   }
 
-  if (id === 'impact') {
+  if (id === 'governance') {
     return (
-      <FullCenteredLayout centered={true} className="!justify-center relative overflow-hidden">
-        {/* Subtle Slide-Specific Aurora Glow */}
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[400px] h-[400px] bg-[#1A8E9F]/5 rounded-full blur-[100px] -z-10" />
-        
-        <header className="mb-8 lg:mb-12 w-full">
-          <SectionHeader category={slide.category} title="Tangible Evolution" />
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 w-full items-center relative">
-          {/* Left Column: Monumental Stats - Compacted for single scroll */}
-          <div className="col-span-1 lg:col-span-5 space-y-6 lg:space-y-8">
-            {slide.stats.map((s: any, i: number) => (
-              <div key={i} className="group flex items-center gap-6 lg:gap-8 relative">
-                {/* Architectural Line - Shorter */}
-                <div className="w-[1px] h-16 lg:h-20 bg-[#0E4E68]/10 relative shrink-0">
-                  <motion.div 
-                    initial={{ height: 0 }}
-                    whileInView={{ height: '100%' }}
-                    className="absolute top-0 left-0 w-full bg-[#D8614E]"
-                  />
-                </div>
-                
-                <div className="flex flex-col justify-center">
-                  <div className="flex items-baseline gap-3">
-                    <span className={`${Typography.title} text-[56px] lg:text-[84px] text-[#D8614E] leading-none tracking-tighter tabular-nums`}>
-                      {s.value}
-                    </span>
-                    <span className={`${Typography.body} text-[9px] lg:text-[10px] font-black text-[#0E4E68] uppercase tracking-[0.2em] mb-2`}>
-                      {s.label}
-                    </span>
+      <FullCenteredLayout centered={true} className="!justify-start !pt-0 relative !pb-[220px]">
+        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-start gap-12 lg:gap-20 px-8 mt-[10vh] lg:mt-[14vh]">
+          <div className="lg:w-2/5 space-y-10">
+            <div className="space-y-4">
+              <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[10px] text-[#1A8E9F] font-normal tracking-[0.2em]">{slide.category}</CardLabel></div>
+              <h3 className={`${Typography.title} text-[38px] lg:text-[52px] text-[#0E4E68] leading-[1.05] tracking-tight`}>{slide.title}</h3>
+              <BodyText size="lg" className="max-w-[500px]">{slide.introTitle}</BodyText>
+            </div>
+            <div className="pt-8 border-t border-[#0E4E68]/5 max-w-[400px]"><BodyText size="lg" className="italic opacity-80">{slide.introSubtitle}</BodyText></div>
+          </div>
+          <div className="lg:w-3/5 space-y-10 border-l border-[#0E4E68]/10 pl-10 lg:pl-16 lg:pt-14">
+            {slide.rituals?.map((r: any, i: number) => (
+              <div key={i} className="flex gap-8 items-start group">
+                <span className={`${Typography.title} text-[16px] text-[#D8614E] mt-1 italic`}>{r.num}</span>
+                <div className="space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                    <h4 className={`${Typography.title} text-[20px] lg:text-[24px] text-[#0E4E68] leading-tight group-hover:text-[#1A8E9F] transition-colors`}>{r.title}</h4>
+                    <span className="text-[9px] font-normal text-[#1A8E9F] uppercase tracking-[0.2em] px-3 py-1 bg-[#1A8E9F]/5 rounded-full w-fit whitespace-nowrap">{r.freq}</span>
                   </div>
-                  <p className={`${Typography.body} text-[12px] lg:text-[14px] text-[#0E4E68]/50 font-medium leading-tight max-w-[220px]`}>
-                    {s.sub}
-                  </p>
+                  <div className="space-y-2">
+                    {r.desc?.map((d: string, j: number) => (
+                      <div key={j} className="flex items-center gap-4"><div className="w-1 h-1 rounded-full bg-[#D8614E]/30" /><p className={`${Typography.body} text-[14px] lg:text-[15px] text-[#2F3B40] leading-snug`}>{d}</p></div>
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
           </div>
+        </div>
+      </FullCenteredLayout>
+    );
+  }
 
-          {/* Right Column: Narrative - Simplified and cleaned up */}
-          <div className="col-span-1 lg:col-span-7">
-            <div className="bg-white/30 backdrop-blur-md rounded-[40px] p-8 lg:p-12 relative overflow-hidden border border-white/40">
-              <div className="relative z-10 space-y-8">
-                {/* Clean Narrative List - No competing titles */}
-                <div className="grid grid-cols-1 gap-5 lg:gap-6">
-                  {slide.whatChanged.map((item: string, i: number) => (
-                    <div key={i} className="flex gap-5 items-start group">
-                      <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#D8614E] shrink-0" />
-                      <p className={`${Typography.body} text-[16px] lg:text-[19px] text-[#0E4E68]/80 leading-snug font-medium tracking-tight`}>
-                        {item}
-                      </p>
+  if (id === 'impact') {
+    return (
+      <FullCenteredLayout centered={true} className="!justify-start !pt-0 py-0 !pb-[220px]">
+        <div className="w-full max-w-[1400px] mx-auto mt-[8vh] lg:mt-[12vh]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            <div className="col-span-1 lg:col-span-5 space-y-12">
+              <div className="space-y-4">
+                <div className="inline-flex items-center px-3 py-1 rounded-full border border-[#1A8E9F]/20 bg-[#1A8E9F]/5">
+                  <span className={`${Typography.body} text-[10px] font-normal text-[#1A8E9F] uppercase tracking-[0.2em]`}>{slide.category}</span>
+                </div>
+                <h2 className={`${Typography.title} text-[38px] lg:text-[52px] text-[#0E4E68] leading-none tracking-tight`}>{slide.title}</h2>
+              </div>
+              <div className="flex flex-col gap-6 border-l border-[#0E4E68]/10 pl-8 lg:pl-10 pt-4">
+                <div className="space-y-8 lg:space-y-10">
+                  {slide.stats?.map((s: any, i: number) => (
+                    <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: i * 0.15 }} className="group cursor-default">
+                      <span className={`${Typography.title} text-[48px] lg:text-[60px] text-[#D8614E] leading-[0.9] tracking-tighter block mb-1 group-hover:text-[#1A8E9F] transition-colors`}>{s.value}</span>
+                      <div className="space-y-0.5">
+                        <span className="text-[9px] font-normal text-[#1A8E9F] uppercase tracking-[0.2em]">{s.label}</span>
+                        <p className="text-[12px] text-[#2F3B40]/70">{s.sub}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="col-span-1 lg:col-span-7 lg:pt-36">
+              <div className="space-y-6 lg:space-y-8">
+                <div className="space-y-5 lg:space-y-6">
+                  {slide.narrative?.map((text: string, i: number) => (
+                    <div key={i} className="flex gap-5 items-start">
+                      <div className="mt-1.5 w-4 h-4 rounded-full border border-[#1A8E9F]/30 flex items-center justify-center shrink-0"><div className="w-1.5 h-1.5 rounded-full bg-[#1A8E9F]" /></div>
+                      <BodyText size="md" className="leading-snug !text-[15px] lg:!text-[17px]">{text}</BodyText>
                     </div>
                   ))}
                 </div>
-
-                <div className="pt-6 border-t border-[#0E4E68]/5">
-                   <p className={`${Typography.title} text-[18px] lg:text-[22px] text-[#1A8E9F] italic font-normal`}>
-                     From individual effort to <span className="text-[#0E4E68] not-italic font-semibold">organizational discipline</span>.
-                   </p>
+                <div className="pt-6 mt-2 border-t border-[#0E4E68]/5 max-w-[580px]">
+                   <p className="text-[#2F3B40] text-[15px] lg:text-[16px] leading-relaxed mb-6 opacity-80">{slide.closingNote}</p>
+                   <div className="space-y-2.5">
+                     {slide.bullets?.map((point: string, i: number) => (
+                       <div key={i} className="flex items-center gap-4"><div className="w-1 h-1 rounded-full bg-[#D8614E]/30" /><span className="text-[#2F3B40]/70 text-[13px] lg:text-[14px]">{point}</span></div>
+                     ))}
+                   </div>
                 </div>
               </div>
             </div>
@@ -901,70 +1045,29 @@ function SlideRenderer({ slide, onSelectDoc, onPrint }: any) {
     );
   }
 
-  if (id === 'governance') {
+  if (id === 'impact-practice') {
     return (
-      <FullCenteredLayout centered={true} className="!justify-center relative overflow-hidden h-screen max-h-screen">
-        {/* Dynamic Background Accents */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-[#1A8E9F]/5 to-[#D8614E]/5 rounded-full blur-[120px] -z-10" />
-
-        <header className="mb-10 lg:mb-12 w-full text-center max-w-4xl mx-auto shrink-0">
-          <SectionHeader 
-            category={slide.category} 
-            title={slide.title} 
-            description={slide.description} 
-            className="text-center"
-          />
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 w-full max-w-7xl mx-auto relative px-8 flex-grow items-start">
-          {slide.rituals.map((r: any, i: number) => (
-            <div key={i} className="group relative flex flex-col items-center text-center">
-              
-              {/* Numeric & Icon Visual */}
-              <div className="relative mb-8 h-28 lg:h-36 flex items-center justify-center">
-                <span className="text-[100px] lg:text-[140px] font-serif italic text-[#0E4E68]/5 leading-none absolute inset-0 flex items-center justify-center group-hover:text-[#1A8E9F]/20 transition-all duration-1000 ease-in-out pointer-events-none select-none">
-                  0{i + 1}
-                </span>
-                
-                <div className="relative z-10 w-16 h-16 lg:w-20 lg:h-20 flex items-center justify-center text-[#D8614E] transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-2">
-                   <SafeIcon icon={r.icon} size={36} className="opacity-80 group-hover:opacity-100" />
-                   <div className="absolute inset-0 bg-[#D8614E]/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-              </div>
-
-              {/* Pure Typography Content */}
-              <div className="space-y-4">
-                <div className="flex flex-col items-center gap-2">
-                  <span className={`${Typography.body} text-[10px] font-black text-[#D8614E] uppercase tracking-[0.2em] mb-1 opacity-60`}>
-                    {r.freq}
-                  </span>
-                  <h4 className={`${Typography.title} text-[26px] lg:text-[32px] text-[#0E4E68] leading-tight transition-all duration-700 group-hover:text-[#1A8E9F] tracking-tighter`}>
-                    {r.title}
-                  </h4>
-                </div>
-                
-                <div className="w-8 h-[1px] bg-[#D8614E]/20 mx-auto group-hover:w-16 group-hover:bg-[#1A8E9F]/40 transition-all duration-700" />
-                
-                <p className={`${Typography.body} text-[15px] lg:text-[17px] leading-relaxed text-[#0E4E68]/60 group-hover:text-[#0E4E68]/90 transition-colors max-w-[280px] mx-auto`}>
-                  {r.text}
-                </p>
-              </div>
-
-              {/* Vertical accent (no border) */}
-              {i < 2 && (
-                <div className="hidden lg:block absolute -right-8 top-1/2 -translate-y-1/2 w-[1px] h-24 bg-gradient-to-b from-transparent via-[#0E4E68]/5 to-transparent" />
-              )}
+      <FullCenteredLayout centered={true} className="!justify-start !pt-0 relative !pb-[220px]">
+        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-start gap-12 lg:gap-20 px-8 mt-[12vh] lg:mt-[16vh]">
+          <div className="lg:w-2/5 space-y-10">
+            <div className="space-y-4">
+              <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[10px] text-[#1A8E9F] font-normal tracking-[0.2em]">{slide.category}</CardLabel></div>
+              <h3 className={`${Typography.title} text-[38px] lg:text-[52px] text-[#0E4E68] leading-[1.05] tracking-tight`}>{slide.title}</h3>
+              <BodyText size="lg" className="max-w-[550px] text-[#2F3B40] leading-relaxed">{slide.introTitle}</BodyText>
             </div>
-          ))}
-        </div>
-
-        {/* Marimekko Detail */}
-        <div className="absolute bottom-32 left-1/2 -translate-x-1/2 opacity-[0.03] pointer-events-none">
-           <svg width="100" height="30" viewBox="0 0 120 40">
-             <circle cx="20" cy="20" r="15" fill="#1A8E9F" />
-             <circle cx="60" cy="20" r="15" fill="#D8614E" />
-             <circle cx="100" cy="20" r="15" fill="#1A8E9F" />
-           </svg>
+            <div className="pt-8 border-t border-[#0E4E68]/5 max-w-[400px]"><BodyText size="lg" className="italic text-[#2F3B40]/70">{slide.introSubtitle}</BodyText></div>
+          </div>
+          <div className="lg:w-3/5 space-y-8 lg:space-y-10 border-l border-[#0E4E68]/10 pl-10 lg:pl-16 lg:pt-14">
+            <div className="space-y-6 lg:space-y-7">
+              {slide.changes?.map((text: string, i: number) => (
+                <div key={i} className="flex gap-6 items-start">
+                  <div className="mt-1.5 w-4 h-4 rounded-full border border-[#1A8E9F]/30 flex items-center justify-center shrink-0"><div className="w-1.5 h-1.5 rounded-full bg-[#1A8E9F]" /></div>
+                  <BodyText size="md" className="leading-snug !text-[15px] lg:!text-[17px]">{text}</BodyText>
+                </div>
+              ))}
+            </div>
+            <div className="pt-8 mt-4 border-t border-[#0E4E68]/5 max-w-[580px]"><p className={`${Typography.body} text-[15px] lg:text-[17px] text-[#1A8E9F] font-normal`}>{slide.footerNote}</p></div>
+          </div>
         </div>
       </FullCenteredLayout>
     );
@@ -972,53 +1075,43 @@ function SlideRenderer({ slide, onSelectDoc, onPrint }: any) {
 
   if (id === 'learnings') {
     return (
-      <FullCenteredLayout centered={true} className="!justify-center relative overflow-hidden h-screen max-h-screen">
-        {/* Dynamic Background Accents */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-[#D8614E]/5 to-[#1A8E9F]/5 rounded-full blur-[120px] -z-10" />
-
-        <header className="mb-10 lg:mb-12 w-full text-center max-w-4xl mx-auto shrink-0">
+      <FullCenteredLayout centered={true} className="!justify-start pt-28 lg:pt-36 relative !pb-[240px]">
+        <header className="mb-8 lg:mb-12 w-full text-center max-w-4xl mx-auto shrink-0">
           <SectionHeader 
             category={slide.category} 
             title={slide.title} 
             description={slide.description} 
-            className="text-center"
+            className="text-center" 
           />
         </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 w-full max-w-7xl mx-auto relative px-8 flex-grow items-start">
-          {slide.lessons.map((lesson: any, i: number) => (
-            <div key={i} className="group relative flex flex-col items-center text-center">
-              
-              {/* Numeric & Icon Visual */}
-              <div className="relative mb-8 h-28 lg:h-36 flex items-center justify-center">
-                <span className="text-[100px] lg:text-[140px] font-serif italic text-[#0E4E68]/5 leading-none absolute inset-0 flex items-center justify-center group-hover:text-[#1A8E9F]/20 transition-all duration-1000 ease-in-out pointer-events-none select-none">
-                  0{i + 1}
-                </span>
-                
-                <div className="relative z-10 w-16 h-16 lg:w-20 lg:h-20 flex items-center justify-center text-[#D8614E] transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-2">
-                   <SafeIcon icon={lesson.icon} size={36} className="opacity-80 group-hover:opacity-100" />
-                   <div className="absolute inset-0 bg-[#D8614E]/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 w-full max-w-7xl mx-auto px-8 mt-4">
+          {slide.lessons?.map((lesson: any, i: number) => (
+            <motion.div 
+              key={i} 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.2, duration: 0.8 }}
+              className="group relative flex flex-col items-center text-center"
+            >
+              <div className="relative mb-8 h-24 lg:h-32 flex items-center justify-center w-full">
+                <motion.span 
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: -30 }}
+                  transition={{ delay: i * 0.2 + 0.3, duration: 1.2 }}
+                  className="text-[90px] lg:text-[130px] font-serif italic text-[#0E4E68]/5 absolute flex items-center justify-center pointer-events-none select-none"
+                >
+                  0{i+1}
+                </motion.span>
+                <div className="relative z-10 w-16 h-16 flex items-center justify-center translate-x-8 lg:translate-x-12 -translate-y-1 lg:-translate-y-2 group-hover:scale-110 transition-transform duration-500">
+                  <div className="absolute inset-0 bg-[#1A8E9F]/5 backdrop-blur-sm rounded-full border border-[#1A8E9F]/10" />
+                  <SafeIcon icon={lesson.icon} size={28} className="text-[#D8614E] relative z-20" />
                 </div>
               </div>
-
-              {/* Pure Typography Content */}
               <div className="space-y-4">
-                <h4 className={`${Typography.title} text-[26px] lg:text-[32px] text-[#0E4E68] leading-tight transition-all duration-700 group-hover:text-[#1A8E9F] tracking-tighter`}>
-                  {lesson.title}
-                </h4>
-                
-                <div className="w-8 h-[1px] bg-[#D8614E]/20 mx-auto group-hover:w-16 group-hover:bg-[#1A8E9F]/40 transition-all duration-700" />
-                
-                <p className={`${Typography.body} text-[15px] lg:text-[17px] leading-relaxed text-[#0E4E68]/60 group-hover:text-[#0E4E68]/90 transition-colors max-w-[280px] mx-auto`}>
-                  {lesson.text}
-                </p>
+                <h4 className={`${Typography.title} text-[24px] lg:text-[32px] text-[#0E4E68] tracking-tighter group-hover:text-[#1A8E9F] transition-colors leading-tight`}>{lesson.title}</h4>
+                <p className={`${Typography.body} text-[15px] lg:text-[17px] leading-relaxed text-[#2F3B40] max-w-[300px] font-normal`}>{lesson.text}</p>
               </div>
-
-              {/* Vertical accent (no border) */}
-              {i < 2 && (
-                <div className="hidden lg:block absolute -right-8 top-1/2 -translate-y-1/2 w-[1px] h-24 bg-gradient-to-b from-transparent via-[#0E4E68]/5 to-transparent" />
-              )}
-            </div>
+            </motion.div>
           ))}
         </div>
       </FullCenteredLayout>
@@ -1026,95 +1119,40 @@ function SlideRenderer({ slide, onSelectDoc, onPrint }: any) {
   }
 
   if (id === 'closing') {
+    const contactInfo = slide.contactInfo || {};
     return (
-      <FullCenteredLayout centered={true} className="!justify-center relative overflow-hidden h-screen max-h-screen pb-8 pt-6">
-        {/* Apple-style Aurora Background */}
-        <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] -z-10">
-          <div className="absolute top-[20%] right-[15%] w-[600px] h-[600px] bg-[#1A8E9F]/5 rounded-full blur-[160px]" />
-          <div className="absolute bottom-[20%] left-[10%] w-[500px] h-[500px] bg-[#D8614E]/5 rounded-full blur-[140px]" />
-        </div>
-        
-        {/* Marimekko Dots Depth */}
-        <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#0E4E68 1.5px, transparent 1.5px)', backgroundSize: '70px 70px' }} />
-
-        <div className="flex flex-col items-center text-center max-w-5xl mx-auto px-6 relative z-10 w-full">
-          
-          {/* 1. SECTION LABEL (Consistent Pill Style) - Compact */}
-          <div className="mb-6 lg:mb-8">
-            <div className="bg-[#1A8E9F]/10 px-5 py-1.5 rounded-full border border-[#1A8E9F]/20">
-              <span className={`${Typography.body} text-[10px] font-black text-[#1A8E9F] uppercase tracking-[0.3em]`}>
-                09 / THE FUTURE
-              </span>
+      <FullCenteredLayout centered={true} className="!justify-start pt-64 lg:pt-80 relative !pb-[180px]">
+        <div className="flex flex-col items-center text-center max-w-5xl mx-auto px-6 relative z-10 w-full shrink-0">
+          <div className="space-y-4 mb-8 lg:mb-12">
+            <div className="inline-block bg-[#1A8E9F]/10 px-5 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[#1A8E9F] uppercase tracking-[0.3em]">{slide.category}</CardLabel></div>
+            <div className="flex flex-col items-center">
+              <h3 className={`${Typography.title} text-[38px] lg:text-[52px] text-[#0E4E68] leading-none mb-2 tracking-tighter`}>{contactInfo.name}</h3>
+              <p className={`${Typography.body} text-[10px] lg:text-[11px] font-normal text-[#1A8E9F] uppercase tracking-[0.5em] opacity-80`}>{lang === 'EN' ? "ORGANIZATIONAL DESIGN & CX SPECIALIST" : "ESPECIALISTA EN DISEÑO ORGANIZACIONAL Y CX"}</p>
             </div>
           </div>
-
-          {/* 2. THE HOOK (Slide Title) - Adjusted Size/Leading */}
-          <h2 className={`${Typography.title} text-[38px] lg:text-[54px] text-[#0E4E68] leading-[1.0] tracking-tight mb-6 max-w-3xl`}>
-            Building for what comes next
-          </h2>
-
-          {/* 3. THE BRAND (Consistent with high-end Petroleum palette) - Adjusted Size */}
-          <div className="flex flex-col items-center mb-6 lg:mb-8">
-            <h3 className={`${Typography.title} text-[30px] lg:text-[44px] text-[#0E4E68] leading-none mb-2 tracking-tighter`}>
-              {slide.contactInfo.name}
-            </h3>
-            <p className={`${Typography.body} text-[10px] lg:text-[11px] font-black text-[#1A8E9F] uppercase tracking-[0.5em] opacity-80`}>
-              {slide.contactInfo.role}
-            </p>
-          </div>
-
-          {/* 4. THE MANIFESTO (Now using Inter as requested) */}
-          <p className={`${Typography.body} text-[15px] lg:text-[17px] text-[#0E4E68]/70 font-medium leading-relaxed max-w-xl mb-8 lg:mb-10`}>
-             "Architecting systems that align business goals with human needs, transforming organizational complexity into customer value."
-          </p>
-
-          {/* 5. CONTACT & CTAS (Unified Horizontal Row) - Compact padding */}
+          <BodyText size="lg" className="max-w-2xl mb-8 lg:mb-14 italic">"{slide.manifesto}"</BodyText>
           <div className="w-full max-w-4xl flex flex-col items-center gap-8 lg:gap-10">
-            
-            {/* Contact Group (Subtle & Elegant) - Reduced Padding */}
-            <div className="flex flex-wrap justify-center gap-x-12 lg:gap-x-16 gap-y-4 border-y border-[#0E4E68]/5 py-5 w-full px-8">
-              <a href={`mailto:${slide.contactInfo.email}`} className="flex items-center gap-4 group hover:no-underline no-underline">
-                <div className="w-9 h-9 rounded-full border border-[#0E4E68]/10 flex items-center justify-center text-[#0E4E68] transition-all duration-500 group-hover:bg-[#1A8E9F] group-hover:text-white group-hover:border-transparent shrink-0">
-                  <SafeIcon icon="Mail" size={16} />
-                </div>
-                <div className="text-left">
-                  <p className="text-[8px] font-black text-[#1A8E9F] uppercase tracking-widest mb-0.5 opacity-60 leading-none">LET'S TALK</p>
-                  <p className={`${Typography.body} text-[14px] lg:text-[16px] font-bold text-[#0E4E68] tracking-tight leading-none`}>{slide.contactInfo.email}</p>
-                </div>
+            <div className="flex flex-wrap justify-center gap-x-10 lg:gap-x-14 gap-y-4 border-y border-[#0E4E68]/5 py-5 w-full px-6">
+              <a href={`mailto:${contactInfo.email}`} className="flex items-center gap-4 group no-underline">
+                <div className="w-8 h-8 rounded-full border border-[#0E4E68]/10 flex items-center justify-center text-[#0E4E68] group-hover:bg-[#1A8E9F] group-hover:text-white transition-all duration-500"><SafeIcon icon="Mail" size={14} /></div>
+                <div className="text-left"><p className="text-[7px] font-normal text-[#1A8E9F] uppercase tracking-widest mb-0.5 opacity-60">{lang === 'EN' ? "LET'S TALK" : "HABLEMOS"}</p><p className="text-[#0E4E68] text-[13px] lg:text-[15px]">{contactInfo.email}</p></div>
               </a>
-
-              <a href={`https://${slide.contactInfo.linkedIn}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group hover:no-underline no-underline">
-                <div className="w-9 h-9 rounded-full border border-[#0E4E68]/10 flex items-center justify-center text-[#0E4E68] transition-all duration-500 group-hover:bg-[#1A8E9F] group-hover:text-white group-hover:border-transparent shrink-0">
-                  <SafeIcon icon="Share2" size={16} />
-                </div>
-                <div className="text-left">
-                  <p className="text-[8px] font-black text-[#1A8E9F] uppercase tracking-widest mb-0.5 opacity-60 leading-none">FOLLOW</p>
-                  <p className={`${Typography.body} text-[14px] lg:text-[16px] font-bold text-[#0E4E68] tracking-tight leading-none`}>{slide.contactInfo.linkedIn.replace('linkedin.com/in/', '')}</p>
-                </div>
+              <a href={`https://${contactInfo.linkedIn}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group no-underline">
+                <div className="w-8 h-8 rounded-full border border-[#0E4E68]/10 flex items-center justify-center text-[#0E4E68] group-hover:bg-[#1A8E9F] group-hover:text-white transition-all duration-500"><SafeIcon icon="Linkedin" size={14} /></div>
+                <div className="text-left"><p className="text-[7px] font-normal text-[#1A8E9F] uppercase tracking-widest mb-0.5 opacity-60">{lang === 'EN' ? "FOLLOW" : "SEGUIR"}</p><p className="text-[#0E4E68] text-[13px] lg:text-[15px]">{contactInfo.linkedIn?.replace('linkedin.com/in/', '')}</p></div>
               </a>
             </div>
-
-            {/* CTA Group - Positions Refined (Primary focus on Next Case) */}
-            <div className="flex flex-col sm:flex-row-reverse items-center justify-center gap-8 lg:gap-12">
-              <button className="bg-[#0E4E68] text-white pl-10 pr-8 py-4 rounded-full flex items-center gap-5 group hover:bg-[#1A8E9F] transition-all duration-700 shadow-[0_15px_30px_-8px_rgba(14,78,104,0.2)] cursor-pointer active:scale-95">
-                <span className="text-[11px] font-black uppercase tracking-[0.4em]">SIGUIENTE CASO</span>
-                <div className="w-4 h-4 flex items-center justify-center transition-transform group-hover:translate-x-1.5">
-                  <SafeIcon icon="ArrowRight" size={14} />
-                </div>
+            <div className="flex flex-col sm:flex-row-reverse items-center justify-center gap-10 lg:gap-14 pt-2">
+              <button className="bg-[#0E4E68] text-white pl-8 pr-7 py-3.5 rounded-full flex items-center gap-4 group hover:bg-[#1A8E9F] transition-all duration-700 shadow-lg shadow-[#0E4E68]/30">
+                <span className="text-[13px] lg:text-[14px] font-normal">{slide.nextCase}</span>
+                <SafeIcon icon="ArrowRight" size={16} className="group-hover:translate-x-2 transition-transform duration-500" />
               </button>
-              
-              <button 
-                onClick={onPrint}
-                className={`${Typography.body} text-[10px] font-black text-[#0E4E68]/40 uppercase tracking-[0.4em] hover:text-[#D8614E] transition-all cursor-pointer border-b border-[#0E4E68]/10 hover:border-[#D8614E]/30 pb-0.5`}
-              >
-                DESCARGAR PORTFOLIO (PDF)
-              </button>
+              <button onClick={onPrint} className="text-[#0E4E68]/40 hover:text-[#0E4E68] transition-all border-b border-[#0E4E68]/10 pb-1 text-[11px] lg:text-[12px]">{slide.pdf}</button>
             </div>
           </div>
         </div>
       </FullCenteredLayout>
     );
   }
-
   return null;
 }
