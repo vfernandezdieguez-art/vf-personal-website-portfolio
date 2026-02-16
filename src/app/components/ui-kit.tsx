@@ -22,7 +22,7 @@ export const Typography = {
 // --- COMPONENTS ---
 
 export const Pill = ({ children, className = "" }: any) => (
-  <div className={`inline-flex items-center px-4 py-1.5 rounded-full bg-[#1A8E9F] text-white text-[10px] font-normal uppercase tracking-[0.2em] shadow-sm ${className}`}>
+  <div className={`inline-flex items-center px-4 py-1.5 rounded-full bg-[#1A8E9F] text-white text-[10px] font-medium uppercase tracking-[0.2em] shadow-sm ${className}`}>
     {children}
   </div>
 );
@@ -54,7 +54,7 @@ export const CardTitle = ({ children, className = "" }: any) => (
 );
 
 export const CardLabel = ({ children, className = "" }: any) => (
-  <p className={`${Typography.body} text-[9px] font-normal text-[#1A8E9F] uppercase tracking-[0.2em] ${className}`}>{children}</p>
+  <p className={`${Typography.body} text-[10px] font-medium text-[#1A8E9F] uppercase tracking-[0.2em] ${className}`}>{children}</p>
 );
 
 export const CardBody = ({ children, className = "" }: any) => (
@@ -72,7 +72,7 @@ export const StatItem = ({ value, label, sub }: any) => (
   <motion.div className="text-center space-y-3 p-6 bg-white/40 backdrop-blur-md rounded-[32px] border border-[#0E4E68]/5 shadow-sm">
     <p className={`${Typography.title} text-[36px] lg:text-[72px] text-[#D8614E] leading-none font-normal`}>{value}</p>
     <div className="space-y-0.5">
-      <p className={`${Typography.body} text-[9px] font-normal text-[#2F3B40] uppercase tracking-[0.2em]`}>{label}</p>
+      <p className={`${Typography.body} text-[9px] font-medium text-[#2F3B40] uppercase tracking-[0.2em]`}>{label}</p>
       <p className={`${Typography.body} text-[11px] text-[#2F3B40]/60 font-normal`}>{sub}</p>
     </div>
   </motion.div>
@@ -262,89 +262,88 @@ export const SlideFooter = ({ current, total, label, onPrev, onNext, onRestart, 
   };
 
   return (
-    <footer className="fixed bottom-6 left-0 right-0 z-[1000] px-6 lg:px-12 flex justify-center pointer-events-none">
+    <footer className="fixed bottom-4 lg:bottom-6 left-0 right-0 z-[1000] px-4 lg:px-12 flex justify-center pointer-events-none">
       {/* Floating Navigation Dock - Advanced Glassmorphism */}
-      <div className="flex items-center gap-2 bg-white/30 backdrop-blur-[24px] border border-white/40 rounded-full p-2 px-4 shadow-[0_8px_32px_rgba(14,78,104,0.08)] pointer-events-auto group hover:bg-white/40 transition-all duration-700">
+      <div className="flex items-center bg-white/40 backdrop-blur-[24px] border border-white/60 rounded-full p-1.5 lg:p-2 pr-4 lg:pr-6 shadow-[0_8px_32px_rgba(14,78,104,0.08)] pointer-events-auto group hover:bg-white/50 transition-all duration-700 max-w-[95vw] sm:max-w-none">
         
-        {/* Progress & Label Group */}
-        <div className="flex flex-col items-start pl-4 pr-6 border-r border-[#0E4E68]/10 mr-2">
-          <div className={`${Typography.body} flex items-baseline gap-1.5`}>
-            <span className="text-[15px] font-normal text-[#0E4E68] tracking-tighter">
+        {/* Progress & Label Group - Responsive Fixed Width */}
+        <div className="flex flex-col items-start pl-3 lg:pl-4 pr-4 lg:pr-6 border-r border-[#0E4E68]/10 w-[85px] lg:w-[140px] shrink-0">
+          <div className={`${Typography.body} flex items-baseline gap-1 lg:gap-1.5`}>
+            <span className="text-[13px] lg:text-[15px] font-normal text-[#0E4E68] tracking-tighter">
               {String(current + 1).padStart(2, '0')}
             </span>
-            <span className="text-[10px] font-normal text-[#0E4E68]/30">/</span>
-            <span className="text-[11px] font-normal text-[#0E4E68]/40">
+            <span className="text-[9px] lg:text-[10px] font-normal text-[#0E4E68]/30">/</span>
+            <span className="text-[10px] lg:text-[11px] font-normal text-[#0E4E68]/40">
               {String(total).padStart(2, '0')}
             </span>
           </div>
-          <span className="text-[8px] font-normal uppercase tracking-[0.3em] text-[#1A8E9F] leading-none">
+          <span className="text-[7px] lg:text-[8px] font-normal uppercase tracking-[0.2em] lg:tracking-[0.3em] text-[#1A8E9F] leading-none truncate w-full">
             {label}
           </span>
         </div>
 
-        {/* Navigation Arrows - Using semi-translucent buttons for integration */}
-        <div className="flex items-center gap-1">
+        {/* Navigation Arrows - Using semi-translucent buttons */}
+        <div className="flex items-center gap-1 pl-1 lg:pl-2">
           <button 
             onClick={onPrev} 
             disabled={current === 0} 
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
+            className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
               current === 0 
               ? 'text-[#0E4E68]/10 opacity-30 cursor-not-allowed' 
               : 'text-[#0E4E68] bg-white/40 hover:bg-[#0E4E68] hover:text-white cursor-pointer active:scale-90 shadow-sm'
             }`}
             aria-label="Previous slide"
           >
-            <SafeIcon icon="ChevronLeft" size={24} strokeWidth={2} />
+            <SafeIcon icon="ChevronLeft" size={20} lgSize={24} strokeWidth={2} />
           </button>
           
           <button 
             onClick={onNext} 
             disabled={current === total - 1} 
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
+            className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
               current === total - 1 
               ? 'text-[#0E4E68]/10 opacity-30 cursor-not-allowed' 
               : 'text-[#0E4E68] bg-white/40 hover:bg-[#0E4E68] hover:text-white cursor-pointer active:scale-90 shadow-sm'
             }`}
             aria-label="Next slide"
           >
-            <SafeIcon icon="ChevronRight" size={24} strokeWidth={2} />
+            <SafeIcon icon="ChevronRight" size={20} lgSize={24} strokeWidth={2} />
           </button>
         </div>
 
-        {/* Restart / Final Action */}
-        {isLast ? (
-          <div className="pl-2 ml-2 border-l border-[#0E4E68]/10">
+        {/* Action / Progress Area - Responsive Fixed Width */}
+        <div className="flex items-center ml-2 lg:ml-4 border-l border-[#0E4E68]/10 min-w-[90px] lg:min-w-[160px] justify-center pl-2 lg:pl-0">
+          {isLast ? (
             <button 
               onClick={onRestart} 
-              className="px-5 py-3 rounded-full bg-[#1A8E9F]/10 backdrop-blur-md text-[#0E4E68] border border-[#0E4E68]/10 text-[11px] font-normal hover:bg-[#0E4E68] hover:text-white transition-all duration-500 cursor-pointer active:scale-95 flex items-center gap-2"
+              className="px-3 lg:px-5 py-2 lg:py-3 rounded-full bg-[#1A8E9F]/10 backdrop-blur-md text-[#0E4E68] border border-[#0E4E68]/10 text-[9px] lg:text-[11px] font-normal hover:bg-[#0E4E68] hover:text-white transition-all duration-500 cursor-pointer active:scale-95 flex items-center gap-1.5 lg:gap-2 whitespace-nowrap"
             >
-               <SafeIcon icon="RotateCcw" size={13} />
-               <span className="hidden sm:inline">{isEn ? 'Restart Case' : 'Reiniciar caso'}</span>
+               <SafeIcon icon="RotateCcw" size={11} lgSize={13} />
+               <span>{isEn ? 'Restart Case' : 'Reiniciar caso'}</span>
             </button>
-          </div>
-        ) : (
-          /* Visual Progress Bar - Integrated with higher transparency */
-          <div 
-            onClick={handleProgressClick}
-            className="w-24 lg:w-32 h-[12px] flex items-center cursor-pointer ml-4 mr-4 hidden md:flex group/progress"
-          >
-            <div className="relative w-full h-[3px] bg-[#0E4E68]/10 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-[#1A8E9F] to-[#D8614E] transition-all duration-700 ease-out"
-                style={{ width: `${progress}%` }}
-              />
-              {/* Hover indicator */}
-              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover/progress:opacity-100 transition-opacity" />
+          ) : (
+            /* Visual Progress Bar - Hidden on very small screens, responsive on medium */
+            <div 
+              onClick={handleProgressClick}
+              className="w-16 sm:w-24 lg:w-32 h-[12px] flex items-center cursor-pointer group/progress"
+            >
+              <div className="relative w-full h-[3px] bg-[#0E4E68]/10 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-[#1A8E9F] to-[#D8614E] transition-all duration-700 ease-out"
+                  style={{ width: `${progress}%` }}
+                />
+                <div className="absolute inset-0 bg-white/20 opacity-0 group-hover/progress:opacity-100 transition-opacity" />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </footer>
   );
 };
 
 export const FullCenteredLayout = ({ children, className = "", centered = false }: any) => (
-  <section className={`flex-grow w-full flex flex-col ${centered ? 'justify-center' : 'items-start'} pt-[40px] lg:pt-[60px] pb-[160px] lg:pb-[220px] px-8 lg:px-20 max-w-[1600px] mx-auto min-h-screen ${className}`}>
+  <section className={`flex-grow w-full flex flex-col ${centered ? 'justify-center' : 'items-start'} pt-[40px] lg:pt-[60px] pb-[160px] lg:pb-[220px] px-10 lg:px-24 max-w-[1440px] mx-auto min-h-screen ${className}`}>
     <div className={`w-full flex flex-col items-start ${centered ? 'mb-[2vh]' : ''}`}>{children}</div>
   </section>
 );
@@ -353,7 +352,7 @@ export const SplitLayout = ({ left, right, className = "", ratio = "5:7", center
   const leftSpan = ratio === "5:7" ? "lg:col-span-5" : ratio === "7:5" ? "lg:col-span-7" : "lg:col-span-6";
   const rightSpan = ratio === "5:7" ? "lg:col-span-7" : ratio === "7:5" ? "lg:col-span-5" : "lg:col-span-6";
   return (
-    <section className={`flex-grow w-full flex flex-col ${centered ? 'justify-center' : 'items-start'} pt-[40px] lg:pt-[60px] pb-[160px] lg:pb-[180px] px-8 lg:px-20 max-w-[1600px] mx-auto min-h-0 ${className}`}>
+    <section className={`flex-grow w-full flex flex-col ${centered ? 'justify-center' : 'items-start'} pt-[40px] lg:pt-[60px] pb-[160px] lg:pb-[180px] px-10 lg:px-24 max-w-[1440px] mx-auto min-h-0 ${className}`}>
       <div className={`grid grid-cols-1 lg:grid-cols-12 w-full gap-12 lg:gap-24 ${centered ? 'items-center' : 'items-start'} ${centered ? 'mb-[2vh]' : ''}`}>
         <div className={`col-span-1 ${leftSpan} flex flex-col`}>
           {left}
@@ -372,7 +371,7 @@ export const SectionHeader = ({ category, title, description, subtitle, classNam
     <header className={`w-full ${className}`}>
       <div className="space-y-4">
         <div className={`inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20 ${isCentered ? 'mx-auto' : ''}`}>
-          <CardLabel className="text-[10px] lg:text-[11px] text-[#1A8E9F] font-normal tracking-[0.2em]">{category}</CardLabel>
+          <CardLabel className="text-[10px] lg:text-[11px] text-[#1A8E9F] font-medium tracking-[0.2em]">{category}</CardLabel>
         </div>
         <Heading level={2} className="text-[2.2rem] md:text-[3.2rem] lg:text-[3.8rem] leading-[1.1] tracking-tight">{title}</Heading>
         {subtitle && <p className={`${Typography.body} text-[12px] font-normal text-[#D8614E] uppercase tracking-[0.1em]`}>{subtitle}</p>}

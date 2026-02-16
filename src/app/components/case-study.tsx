@@ -10,13 +10,13 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 // Assets
-import teamImage1 from 'figma:asset/e3a22d6960490a45ffcc0d24e1a869dfca4ffa88.png';
-import eventImage from 'figma:asset/5844756e19790e7d1433c2abbd9dec891e645057.png';
-import groupImage from 'figma:asset/63fac24f37631fc5c6e93637e122a66a63c6002c.png';
-import gpTeamPhoto from 'figma:asset/bbc15dc266cae7d12a3fa31f99b613e6d84f5a48.png';
-import maturityFramework from 'figma:asset/6c5385c5b1dbcb1880f29de40d3a7f77097e5b57.png';
-import maturityScales from 'figma:asset/1684521193bcc9d1dac5e3348a4b96f4098fbac5.png';
-import effortModel from 'figma:asset/a227bff4af1daa63b9939c4bdc5ec6ae409eebc6.png';
+import teamImage1 from '../../assets/e3a22d6960490a45ffcc0d24e1a869dfca4ffa88.png';
+import eventImage from '../../assets/5844756e19790e7d1433c2abbd9dec891e645057.png';
+import groupImage from '../../assets/63fac24f37631fc5c6e93637e122a66a63c6002c.png';
+import gpTeamPhoto from '../../assets/bbc15dc266cae7d12a3fa31f99b613e6d84f5a48.png';
+import maturityFramework from '../../assets/6c5385c5b1dbcb1880f29de40d3a7f77097e5b57.png';
+import maturityScales from '../../assets/1684521193bcc9d1dac5e3348a4b96f4098fbac5.png';
+import effortModel from '../../assets/a227bff4af1daa63b9939c4bdc5ec6ae409eebc6.png';
 
 // --- DATA ---
 const slidesData = [
@@ -359,7 +359,14 @@ const ChallengeDiagram = ({ lang }: { lang: string }) => (
           ))}
         </g>
 
-        {/* FLOWING PARTICLES - Animación restaurada y potenciada */}
+        {/* DIAGONAL CONNECTING LINES - Moved here to be behind the circles */}
+        <g>
+          {["M 120 120 L 350 350", "M 580 120 L 350 350", "M 120 580 L 350 350", "M 580 580 L 350 350"].map((path, i) => (
+            <path key={i} d={path} stroke="#1A8E9F" strokeWidth="2.5" strokeDasharray="10 10" opacity="0.3" />
+          ))}
+        </g>
+
+        {/* FLOWING PARTICLES */}
         <g>
           {[
             { path: "M 350 350 L 120 120", delay: 0 },
@@ -383,7 +390,7 @@ const ChallengeDiagram = ({ lang }: { lang: string }) => (
           <text x="350" y="335" textAnchor="middle" fill="white" fontSize="11" fontWeight="900" letterSpacing="0.4em" className="font-sans opacity-70 uppercase">
             {lang === 'EN' ? 'CENTER OF' : 'CENTRO DE'}
           </text>
-          <text x="350" y="372" textAnchor="middle" fill="white" fontSize="28" className={`${Typography.title} italic font-normal`}>
+          <text x="350" y="372" textAnchor="middle" fill="white" fontSize="28" className={`${Typography.title} font-normal`}>
             {lang === 'EN' ? 'Excellence' : 'Excelencia'}
           </text>
           <circle cx="435" cy="350" r="8" fill="#D8614E" />
@@ -400,12 +407,6 @@ const ChallengeDiagram = ({ lang }: { lang: string }) => (
             <text x={bank.x} y={bank.y + 6} textAnchor="middle" fill="#0E4E68" fontSize="14" fontWeight="900" letterSpacing="0.25em" className="font-sans">{bank.label}</text>
           </g>
         ))}
-
-        <g>
-          {["M 120 120 L 350 350", "M 580 120 L 350 350", "M 120 580 L 350 350", "M 580 580 L 350 350"].map((path, i) => (
-            <path key={i} d={path} stroke="#1A8E9F" strokeWidth="2.5" strokeDasharray="10 10" opacity="0.3" />
-          ))}
-        </g>
       </svg>
     </div>
   </div>
@@ -578,17 +579,6 @@ export function CaseStudy() {
                   <h2 className={`${Typography.title} text-[20px] lg:text-[42px] text-[#0E4E68] leading-tight tracking-tight`}>{selectedDoc.title}</h2>
                </div>
                <div className="flex items-center gap-3 lg:gap-6 shrink-0">
-                  {!selectedDoc.id?.includes('diagram') && (
-                    <button 
-                      onClick={() => setSidebarCollapsed(!sidebarCollapsed)} 
-                      className={`items-center gap-2 lg:gap-3 px-3 lg:px-6 py-2 lg:py-2.5 rounded-full bg-white border border-[#1A8E9F] hover:bg-[#1A8E9F]/5 transition-all duration-300 ${!sidebarCollapsed ? 'hidden md:flex' : 'flex'}`}
-                    >
-                      <SafeIcon icon={sidebarCollapsed ? "BookOpen" : "EyeOff"} size={14} className="text-[#1A8E9F]" />
-                      <span className={`${Typography.body} text-[9px] lg:text-[11px] font-normal tracking-[0.2em] uppercase text-[#0E4E68]`}>
-                        {lang === 'EN' ? (sidebarCollapsed ? "Open Notes" : "Hide Notes") : (sidebarCollapsed ? "Ver Notas" : "Ocultar Notas")}
-                      </span>
-                    </button>
-                  )}
                   <button onClick={() => setSelectedDoc(null)} className="w-10 h-10 lg:w-14 lg:h-14 rounded-full bg-white border border-[#0E4E68]/10 flex items-center justify-center text-[#0E4E68] hover:bg-[#0E4E68] hover:text-white transition-all duration-500 shadow-sm">
                     <SafeIcon icon="X" size={18} />
                   </button>
@@ -668,13 +658,25 @@ export function CaseStudy() {
                   </TransformWrapper>
                </div>
 
+               {sidebarCollapsed && !selectedDoc.id?.includes('diagram') && (
+                 <button 
+                   onClick={() => setSidebarCollapsed(false)}
+                   className="absolute right-0 top-1/2 -translate-y-1/2 z-[100] bg-white border border-r-0 border-[#0E4E68]/10 py-10 px-2 rounded-l-[24px] shadow-2xl flex flex-col items-center gap-5 group hover:bg-[#1A8E9F]/5 transition-all duration-300"
+                 >
+                   <SafeIcon icon="ChevronLeft" size={16} className="text-[#1A8E9F] group-hover:-translate-x-1 transition-transform" />
+                   <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] uppercase tracking-[0.4em] font-medium text-[#0E4E68]">{lang === 'EN' ? "View Details" : "Ver Detalles"}</span>
+                 </button>
+               )}
+
                <AnimatePresence>
                   {!sidebarCollapsed && !selectedDoc.id?.includes('diagram') && (
-                    <motion.aside initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} className="absolute right-0 top-0 bottom-0 w-full md:w-[450px] lg:w-[550px] bg-white/95 backdrop-blur-3xl border-l border-[#0E4E68]/5 z-[80] overflow-y-auto p-8 lg:p-14 space-y-12">
-                        <button onClick={() => setSidebarCollapsed(true)} className="md:hidden flex items-center gap-2 text-[#1A8E9F] mb-6">
-                          <SafeIcon icon="ArrowLeft" size={14} />
-                          <span className="text-[10px] font-normal uppercase tracking-widest">{lang === 'EN' ? "Back to Image" : "Volver a la Imagen"}</span>
-                        </button>
+                    <motion.aside initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} className="absolute right-0 top-0 bottom-0 w-full md:w-[450px] lg:w-[550px] bg-white/95 backdrop-blur-3xl border-l border-[#0E4E68]/5 z-[110] overflow-y-auto p-8 lg:p-14 space-y-12">
+                        <div className="flex items-center mb-6">
+                           <button onClick={() => setSidebarCollapsed(true)} className="flex items-center gap-3 text-[#1A8E9F] group">
+                             <SafeIcon icon="ChevronRight" size={18} className="group-hover:translate-x-1 transition-transform" />
+                             <span className="text-[10px] lg:text-[11px] font-normal uppercase tracking-widest">{lang === 'EN' ? "Hide Details" : "Ocultar Detalles"}</span>
+                           </button>
+                        </div>
                         <div className="space-y-6">
                           <CardLabel>{lang === 'EN' ? "Project Context" : "Contexto del Proyecto"}</CardLabel>
                           <h3 className={`${Typography.title} text-[28px] lg:text-[34px] text-[#0E4E68] leading-[1.15] tracking-tight`}>{selectedDoc.text}</h3>
@@ -698,7 +700,7 @@ export function CaseStudy() {
                                 <div className="w-8 h-8 rounded-xl bg-[#1A8E9F] flex items-center justify-center text-white"><SafeIcon icon="Zap" size={14} /></div>
                                 <p className={`${Typography.body} text-[10px] font-normal text-[#1A8E9F] uppercase tracking-[0.2em]`}>{lang === 'EN' ? "VF Methodology" : "Metodología VF"}</p>
                               </div>
-                              <p className={`${Typography.body} text-[14px] text-[#2F3B40] italic leading-relaxed`}>{selectedDoc.methodology}</p>
+                              <p className={`${Typography.body} text-[14px] text-[#2F3B40] leading-relaxed`}>{selectedDoc.methodology}</p>
                            </div>
                         </div>
                     </motion.aside>
@@ -730,7 +732,7 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
           </div>
           <div className="col-span-1 lg:col-span-8 lg:pl-16 text-center lg:text-left">
             <Heading className="mb-8 !text-[clamp(2.5rem,6vw,4rem)] leading-[1.1]">
-              {lang === 'EN' ? <>Experience <br /> <span className="text-[#1A8E9F] italic font-normal">Center of Excellence</span></> : <>Centro de Excelencia <br /> <span className="text-[#1A8E9F] italic font-normal">de Experiencia</span></>}
+              {lang === 'EN' ? <>Experience <br /> <span className="text-[#1A8E9F] font-normal">Center of Excellence</span></> : <>Centro de Excelencia <br /> <span className="text-[#1A8E9F] font-normal">de Experiencia</span></>}
             </Heading>
             <BodyText size="lg" className="max-w-[450px] mx-auto lg:mx-0 opacity-80">{slide.subtitle}</BodyText>
           </div>
@@ -753,19 +755,19 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
   if (id === 'challenge' || id === 'pillars') {
     const isPillars = id === 'pillars';
     return (
-      <div className="w-full flex-grow flex flex-col items-center justify-center relative overflow-hidden px-6 lg:px-20 pt-16 pb-[200px] lg:pb-[240px]">
+      <FullCenteredLayout centered={true} className="!pt-[60px] pb-[200px] lg:pb-[240px]">
         {isPillars && activeBlock !== null && (
           <div onClick={() => setActiveBlock(null)} className="absolute inset-0 z-30 cursor-default" />
         )}
-        <div className="w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center relative z-10">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center relative z-10">
           <div className="lg:col-span-5 space-y-10 lg:pr-6 pt-0">
             <div className="space-y-4">
-              <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[10px] text-[#1A8E9F] font-normal tracking-[0.2em]">{slide.category}</CardLabel></div>
+              <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[10px] text-[#1A8E9F] font-medium tracking-[0.2em]">{slide.category}</CardLabel></div>
               <Heading level={2} className="text-[2.6rem] lg:text-[3.8rem] leading-[1.05] tracking-tighter">{slide.title}</Heading>
             </div>
             <div className="space-y-6 max-w-[520px]">
               {(slide.introText || "").split('\n\n').map((para: string, idx: number) => (
-                <BodyText key={idx} size="md" className={`${idx === 0 ? 'text-[#2F3B40]' : 'text-[#2F3B40]/70 italic'} leading-relaxed font-normal`}>
+                <BodyText key={idx} size="md" className={`${idx === 0 ? 'text-[#2F3B40]' : 'text-[#2F3B40]/70'} leading-relaxed font-normal`}>
                   {para}
                 </BodyText>
               ))}
@@ -816,7 +818,7 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
                           <AnimatePresence>
                             {activeBlock === i && (
                               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                                <p className={`${Typography.body} text-[14px] text-white/80 mt-5 leading-relaxed italic border-t border-white/10 pt-5`}>"{bullet.subtext}"</p>
+                                <p className={`${Typography.body} text-[14px] text-white/80 mt-5 leading-relaxed border-t border-white/10 pt-5`}>"{bullet.subtext}"</p>
                               </motion.div>
                             )}
                           </AnimatePresence>
@@ -829,7 +831,7 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
             </div>
           </div>
         </div>
-      </div>
+      </FullCenteredLayout>
     );
   }
 
@@ -855,9 +857,9 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
             text: slide.description,
             methodology: lang === 'EN' ? 'Operating system for multi-bank scaling.' : 'Sistema operativo para escalado multi-banco.'
           })}
-          className="w-full flex-none flex items-center justify-center relative py-2 lg:py-4 cursor-zoom-in group transition-all duration-700 h-[18vh] lg:h-[22vh] min-h-[200px]"
+          className="w-full flex-none flex items-center justify-center relative py-4 lg:py-6 cursor-zoom-in group transition-all duration-700 h-[22vh] lg:h-[28vh] min-h-[250px]"
         >
-          <div className="w-full h-full max-w-[650px] mx-auto transition-transform duration-700 group-hover:scale-[1.01]">
+          <div className="w-full h-full max-w-[850px] mx-auto transition-transform duration-700 group-hover:scale-[1.02]">
             <StrategyDiagram lang={lang} />
           </div>
           <div className="absolute top-1/2 right-4 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 backdrop-blur-md p-2 rounded-full border border-[#0E4E68]/10 text-[#0E4E68] shadow-md">
@@ -865,7 +867,7 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 mt-4 lg:mt-6 shrink-0 relative z-10 w-full px-4 lg:px-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 mt-4 lg:mt-6 shrink-0 relative z-10 w-full">
           {slide.pillars?.map((p: any, i: number) => (
             <motion.div 
               key={i} 
@@ -893,21 +895,21 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
 
   if (id === 'role') {
     return (
-      <div className="w-full flex-grow flex flex-col items-center justify-center px-8 lg:px-20 py-4 lg:py-8 overflow-hidden pb-[180px]">
-        <div className="w-full max-w-[1500px] grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+      <FullCenteredLayout centered={true} className="!pt-[60px] pb-[180px]">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
           <div className="lg:col-span-5 flex flex-col justify-center space-y-8 lg:space-y-10">
             <header className="space-y-4">
-              <div className="inline-block bg-[#1A8E9F]/5 px-3 py-1 rounded-full border border-[#1A8E9F]/15"><CardLabel className="text-[9px] text-[#1A8E9F] font-normal tracking-[0.25em] uppercase">{slide.category}</CardLabel></div>
+              <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[10px] text-[#1A8E9F] font-medium tracking-[0.2em] uppercase">{slide.category}</CardLabel></div>
               <h2 className={`${Typography.title} text-[2.8rem] lg:text-[4.2rem] text-[#0E4E68] leading-[0.95] tracking-tight`}>{lang === 'EN' ? <>Architecting <br /> the System</> : <>Arquitecto <br /> del sistema</>}</h2>
             </header>
             <div className="space-y-6 lg:space-y-8">
               <p className={`${Typography.body} text-[15px] lg:text-[17px] text-[#2F3B40] font-normal leading-relaxed max-w-[460px]`}>{slide.roleIntro}</p>
               <div className="pt-6 border-t border-[#0E4E68]/10 space-y-6 lg:space-y-8">
-                <p className={`${Typography.body} text-[9px] lg:text-[10px] font-normal text-[#1A8E9F] tracking-[0.3em] uppercase opacity-80`}>{lang === 'EN' ? "I worked across three layers:" : "Trabajé en tres niveles:"}</p>
+                <CardLabel className="opacity-80 tracking-[0.3em]">{lang === 'EN' ? "I worked across three layers:" : "Trabajé en tres niveles:"}</CardLabel>
                 <div className="grid grid-cols-1 gap-5 lg:gap-6">
                   {slide.roleBullets?.map((b: any, i: number) => (
                     <div key={i} className="group flex gap-5 items-start">
-                      <span className={`${Typography.title} text-[15px] lg:text-[16px] text-[#D8614E] opacity-50 mt-0.5 italic`}>0{i+1}</span>
+                      <span className={`${Typography.title} text-[15px] lg:text-[16px] text-[#D8614E] opacity-50 mt-0.5`}>0{i+1}</span>
                       <div className="space-y-0.5">
                         <h4 className={`${Typography.title} text-[17px] lg:text-[19px] text-[#0E4E68] font-normal tracking-tight group-hover:text-[#1A8E9F] transition-colors`}>{b.title}</h4>
                         <p className={`${Typography.body} text-[13px] lg:text-[14px] text-[#2F3B40] opacity-60 leading-snug`}>{b.text}</p>
@@ -919,20 +921,25 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
             </div>
           </div>
           <div className="lg:col-span-7 relative h-[500px] lg:h-[650px] flex items-center justify-center">
-            <div className="relative w-full h-full max-w-[650px]">
+            <div className="relative w-full h-full">
               <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2 }} className="absolute top-[20%] left-0 w-[80%] aspect-[1.3] rounded-[48px] overflow-hidden shadow-2xl z-10 border border-white/40">
                 <img src={slide.collage[0]} className="w-full h-full object-cover" />
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 30, y: -20 }} whileInView={{ opacity: 1, x: 0, y: 0 }} transition={{ duration: 1, delay: 0.3 }} className="absolute top-[10%] right-[-5%] w-[45%] aspect-[0.75] rounded-[40px] overflow-hidden shadow-2xl z-20 border border-white/60">
+              <motion.div initial={{ opacity: 0, x: 30, y: -20 }} whileInView={{ opacity: 1, x: 0, y: 0 }} transition={{ duration: 1, delay: 0.3 }} className="absolute top-[5%] right-[-5%] w-[45%] aspect-[0.75] rounded-[40px] overflow-hidden shadow-2xl z-20 border border-white/60">
                 <img src={slide.collage[1]} className="w-full h-full object-cover" />
               </motion.div>
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="absolute bottom-[0%] right-[-8%] w-[40%] lg:w-[45%] bg-[#D8614E] p-7 lg:p-10 rounded-[50px] shadow-2xl z-30 text-white">
-                <p className={`${Typography.title} italic text-[18px] lg:text-[22px] leading-[1.2] tracking-tight`}>{lang === 'EN' ? "50+ professionals. 4 banks. One ecosystem." : "50+ profesionales. 4 bancos. Un ecosistema."}</p>
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="absolute bottom-[-2%] right-[-8%] w-[40%] lg:w-[45%] bg-[#D8614E] p-7 lg:p-10 rounded-[50px] shadow-2xl z-30 text-white">
+                <p className={`${Typography.title} text-[18px] lg:text-[22px] leading-[1.3] tracking-tight`}>
+                  {lang === 'EN' ? 
+                    <>50+ professionals.<br />4 banks.<br />One ecosystem.</> : 
+                    <>50+ profesionales.<br />4 bancos.<br />Un ecosistema.</>
+                  }
+                </p>
               </motion.div>
             </div>
           </div>
         </div>
-      </div>
+      </FullCenteredLayout>
     );
   }
 
@@ -961,23 +968,25 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
   if (id === 'governance') {
     return (
       <FullCenteredLayout centered={true} className="!justify-start !pt-0 relative !pb-[220px]">
-        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-start gap-12 lg:gap-20 px-8 mt-[10vh] lg:mt-[14vh]">
+        <div className="w-full flex flex-col lg:flex-row items-start gap-12 lg:gap-20 mt-[10vh] lg:mt-[14vh]">
           <div className="lg:w-2/5 space-y-10">
             <div className="space-y-4">
-              <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[10px] text-[#1A8E9F] font-normal tracking-[0.2em]">{slide.category}</CardLabel></div>
+              <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[10px] text-[#1A8E9F] font-medium tracking-[0.2em]">{slide.category}</CardLabel></div>
               <h3 className={`${Typography.title} text-[38px] lg:text-[52px] text-[#0E4E68] leading-[1.05] tracking-tight`}>{slide.title}</h3>
               <BodyText size="lg" className="max-w-[500px]">{slide.introTitle}</BodyText>
             </div>
-            <div className="pt-8 border-t border-[#0E4E68]/5 max-w-[400px]"><BodyText size="lg" className="italic opacity-80">{slide.introSubtitle}</BodyText></div>
+            <div className="pt-8 border-t border-[#0E4E68]/5 max-w-[400px]"><BodyText size="lg" className="opacity-80 font-normal">{slide.introSubtitle}</BodyText></div>
           </div>
           <div className="lg:w-3/5 space-y-10 border-l border-[#0E4E68]/10 pl-10 lg:pl-16 lg:pt-14">
             {slide.rituals?.map((r: any, i: number) => (
               <div key={i} className="flex gap-8 items-start group">
-                <span className={`${Typography.title} text-[16px] text-[#D8614E] mt-1 italic`}>{r.num}</span>
+                <span className={`${Typography.title} text-[16px] text-[#D8614E] mt-1`}>{r.num}</span>
                 <div className="space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                     <h4 className={`${Typography.title} text-[20px] lg:text-[24px] text-[#0E4E68] leading-tight group-hover:text-[#1A8E9F] transition-colors`}>{r.title}</h4>
-                    <span className="text-[9px] font-normal text-[#1A8E9F] uppercase tracking-[0.2em] px-3 py-1 bg-[#1A8E9F]/5 rounded-full w-fit whitespace-nowrap">{r.freq}</span>
+                    <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20 w-fit whitespace-nowrap">
+                      <CardLabel>{r.freq}</CardLabel>
+                    </div>
                   </div>
                   <div className="space-y-2">
                     {r.desc?.map((d: string, j: number) => (
@@ -996,12 +1005,12 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
   if (id === 'impact') {
     return (
       <FullCenteredLayout centered={true} className="!justify-start !pt-0 py-0 !pb-[220px]">
-        <div className="w-full max-w-[1400px] mx-auto mt-[8vh] lg:mt-[12vh]">
+        <div className="w-full mt-[8vh] lg:mt-[12vh]">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             <div className="col-span-1 lg:col-span-5 space-y-12">
               <div className="space-y-4">
-                <div className="inline-flex items-center px-3 py-1 rounded-full border border-[#1A8E9F]/20 bg-[#1A8E9F]/5">
-                  <span className={`${Typography.body} text-[10px] font-normal text-[#1A8E9F] uppercase tracking-[0.2em]`}>{slide.category}</span>
+                <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20">
+                  <CardLabel>{slide.category}</CardLabel>
                 </div>
                 <h2 className={`${Typography.title} text-[38px] lg:text-[52px] text-[#0E4E68] leading-none tracking-tight`}>{slide.title}</h2>
               </div>
@@ -1011,7 +1020,7 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
                     <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: i * 0.15 }} className="group cursor-default">
                       <span className={`${Typography.title} text-[48px] lg:text-[60px] text-[#D8614E] leading-[0.9] tracking-tighter block mb-1 group-hover:text-[#1A8E9F] transition-colors`}>{s.value}</span>
                       <div className="space-y-0.5">
-                        <span className="text-[9px] font-normal text-[#1A8E9F] uppercase tracking-[0.2em]">{s.label}</span>
+                        <CardLabel>{s.label}</CardLabel>
                         <p className="text-[12px] text-[#2F3B40]/70">{s.sub}</p>
                       </div>
                     </motion.div>
@@ -1048,14 +1057,14 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
   if (id === 'impact-practice') {
     return (
       <FullCenteredLayout centered={true} className="!justify-start !pt-0 relative !pb-[220px]">
-        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-start gap-12 lg:gap-20 px-8 mt-[12vh] lg:mt-[16vh]">
+        <div className="w-full flex flex-col lg:flex-row items-start gap-12 lg:gap-20 mt-[12vh] lg:mt-[16vh]">
           <div className="lg:w-2/5 space-y-10">
             <div className="space-y-4">
-              <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[10px] text-[#1A8E9F] font-normal tracking-[0.2em]">{slide.category}</CardLabel></div>
+              <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[10px] text-[#1A8E9F] font-medium tracking-[0.2em]">{slide.category}</CardLabel></div>
               <h3 className={`${Typography.title} text-[38px] lg:text-[52px] text-[#0E4E68] leading-[1.05] tracking-tight`}>{slide.title}</h3>
               <BodyText size="lg" className="max-w-[550px] text-[#2F3B40] leading-relaxed">{slide.introTitle}</BodyText>
             </div>
-            <div className="pt-8 border-t border-[#0E4E68]/5 max-w-[400px]"><BodyText size="lg" className="italic text-[#2F3B40]/70">{slide.introSubtitle}</BodyText></div>
+            <div className="pt-8 border-t border-[#0E4E68]/5 max-w-[400px]"><BodyText size="lg" className="text-[#2F3B40]/70 font-normal">{slide.introSubtitle}</BodyText></div>
           </div>
           <div className="lg:w-3/5 space-y-8 lg:space-y-10 border-l border-[#0E4E68]/10 pl-10 lg:pl-16 lg:pt-14">
             <div className="space-y-6 lg:space-y-7">
@@ -1076,7 +1085,7 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
   if (id === 'learnings') {
     return (
       <FullCenteredLayout centered={true} className="!justify-start pt-28 lg:pt-36 relative !pb-[240px]">
-        <header className="mb-8 lg:mb-12 w-full text-center max-w-4xl mx-auto shrink-0">
+        <header className="mb-8 lg:mb-12 w-full text-center mx-auto shrink-0">
           <SectionHeader 
             category={slide.category} 
             title={slide.title} 
@@ -1084,7 +1093,7 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
             className="text-center" 
           />
         </header>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 w-full max-w-7xl mx-auto px-8 mt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 w-full mt-4">
           {slide.lessons?.map((lesson: any, i: number) => (
             <motion.div 
               key={i} 
@@ -1098,7 +1107,7 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: -30 }}
                   transition={{ delay: i * 0.2 + 0.3, duration: 1.2 }}
-                  className="text-[90px] lg:text-[130px] font-serif italic text-[#0E4E68]/5 absolute flex items-center justify-center pointer-events-none select-none"
+                  className="text-[90px] lg:text-[130px] font-serif text-[#0E4E68]/5 absolute flex items-center justify-center pointer-events-none select-none"
                 >
                   0{i+1}
                 </motion.span>
@@ -1122,20 +1131,22 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
     const contactInfo = slide.contactInfo || {};
     return (
       <FullCenteredLayout centered={true} className="!justify-start pt-64 lg:pt-80 relative !pb-[180px]">
-        <div className="flex flex-col items-center text-center max-w-5xl mx-auto px-6 relative z-10 w-full shrink-0">
+        <div className="flex flex-col items-center text-center relative z-10 w-full shrink-0">
           <div className="space-y-4 mb-8 lg:mb-12">
-            <div className="inline-block bg-[#1A8E9F]/10 px-5 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[#1A8E9F] uppercase tracking-[0.3em]">{slide.category}</CardLabel></div>
+            <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20">
+              <CardLabel>{slide.category}</CardLabel>
+            </div>
             <div className="flex flex-col items-center">
               <h3 className={`${Typography.title} text-[38px] lg:text-[52px] text-[#0E4E68] leading-none mb-2 tracking-tighter`}>{contactInfo.name}</h3>
-              <p className={`${Typography.body} text-[10px] lg:text-[11px] font-normal text-[#1A8E9F] uppercase tracking-[0.5em] opacity-80`}>{lang === 'EN' ? "ORGANIZATIONAL DESIGN & CX SPECIALIST" : "ESPECIALISTA EN DISEÑO ORGANIZACIONAL Y CX"}</p>
+              <p className={`${Typography.body} text-[10px] lg:text-[11px] font-medium text-[#1A8E9F] uppercase tracking-[0.5em] opacity-80`}>{lang === 'EN' ? "ORGANIZATIONAL DESIGN & CX SPECIALIST" : "ESPECIALISTA EN DISEÑO ORGANIZACIONAL Y CX"}</p>
             </div>
           </div>
-          <BodyText size="lg" className="max-w-2xl mb-8 lg:mb-14 italic">"{slide.manifesto}"</BodyText>
-          <div className="w-full max-w-4xl flex flex-col items-center gap-8 lg:gap-10">
+          <BodyText size="lg" className="max-w-2xl mb-8 lg:mb-14 italic font-normal text-[#2F3B40]/90 leading-relaxed">"{slide.manifesto}"</BodyText>
+          <div className="w-full flex flex-col items-center gap-8 lg:gap-10">
             <div className="flex flex-wrap justify-center gap-x-10 lg:gap-x-14 gap-y-4 border-y border-[#0E4E68]/5 py-5 w-full px-6">
               <a href={`mailto:${contactInfo.email}`} className="flex items-center gap-4 group no-underline">
                 <div className="w-8 h-8 rounded-full border border-[#0E4E68]/10 flex items-center justify-center text-[#0E4E68] group-hover:bg-[#1A8E9F] group-hover:text-white transition-all duration-500"><SafeIcon icon="Mail" size={14} /></div>
-                <div className="text-left"><p className="text-[7px] font-normal text-[#1A8E9F] uppercase tracking-widest mb-0.5 opacity-60">{lang === 'EN' ? "LET'S TALK" : "HABLEMOS"}</p><p className="text-[#0E4E68] text-[13px] lg:text-[15px]">{contactInfo.email}</p></div>
+                <div className="text-left"><p className="text-[7px] font-medium text-[#1A8E9F] uppercase tracking-widest mb-0.5 opacity-60">{lang === 'EN' ? "LET'S TALK" : "HABLEMOS"}</p><p className="text-[#0E4E68] text-[13px] lg:text-[15px]">{contactInfo.email}</p></div>
               </a>
               <a href={`https://${contactInfo.linkedIn}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group no-underline">
                 <div className="w-8 h-8 rounded-full border border-[#0E4E68]/10 flex items-center justify-center text-[#0E4E68] group-hover:bg-[#1A8E9F] group-hover:text-white transition-all duration-500"><SafeIcon icon="Linkedin" size={14} /></div>

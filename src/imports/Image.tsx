@@ -1,4 +1,4 @@
-import imgImg489811 from "figma:asset/7c2b5f74bf8eaadfa248f127ed1c67f707799e56.png";
+import imgImg489811 from "../assets/7c2b5f74bf8eaadfa248f127ed1c67f707799e56.png";
 
 export default function Image() {
   return (

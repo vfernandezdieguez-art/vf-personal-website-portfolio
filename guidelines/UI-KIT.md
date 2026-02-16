@@ -1,65 +1,65 @@
 # UI Kit Definition
 
-This document describes the design and implementation contract for `src/app/components/ui-kit.tsx`.
-Any UI change in this repository must preserve these definitions.
+This file is the implementation guide for `/Users/viviana/repos/portfolio2026/src/app/components/ui-kit.tsx`.
+Any UI change must follow this reference.
 
-## Tokens
+## Core tokens
 
-- Colors are defined in `Colors`:
+- Colors (`Colors`):
   - `petroleo`: `#0E4E68`
   - `turquesa`: `#1A8E9F`
   - `coral`: `#D8614E`
   - `marfil`: `#FBF8F1`
   - `marfilDark`: `#F3F1EA`
   - `textDark`: `#2F3B40`
-- Typography aliases are centralized in `Typography`:
-  - `title`: serif display style
-  - `body`: sans body style
+- Typography (`Typography`):
+  - `title` for headings and display text
+  - `body` for paragraph and utility text
 
-## Primitive Components
+## UI primitives
 
-- `Pill`: compact uppercase badge with rounded-full shape and tracking.
-- `Heading`: semantic `h1..h4` generator with size scale by `level`.
-- `BodyText`: body paragraph scale (`sm`, `md`, `lg`) with consistent leading.
-- `CardTitle`, `CardLabel`, `CardBody`: card text primitives; keep hierarchy and case.
-- `BaseCard`: glassmorphism card container with optional hover elevation.
-- `IconButton`: circular icon action button.
+- `Pill`: uppercase rounded badge.
+- `Heading`: semantic heading (`h1` to `h4`) with fixed scale.
+- `BodyText`: paragraph text in `sm`, `md`, `lg`.
+- `CardTitle`, `CardLabel`, `CardBody`: card text hierarchy.
+- `BaseCard`: glass card container with optional hover behavior.
+- `IconButton`: circular icon action.
 
-## Composed Components
+## Composite components
 
-- `StatItem`: centered KPI block with strong numeric emphasis.
-- `ArtifactCard`: preview card with image + metadata + hover treatment.
-- `SectionHeader`: category chip + title + optional subtitle/description.
-- `GlobalHeader`: fixed top nav with language switch, responsive desktop/mobile behavior.
-- `SlideFooter`: fixed bottom nav with step indicator, arrows, and progress/restart action.
+- `StatItem`: KPI block with value, label, and sublabel.
+- `ArtifactCard`: image + metadata card for clickable artifacts.
+- `GlobalHeader`: fixed top navigation with language toggle and mobile menu.
+- `SlideFooter`: fixed bottom navigation with slide progress and actions.
+- `SectionHeader`: section intro wrapper (category, title, subtitle, description).
 
-## Layout System
+## Layout rules
 
 - `FullCenteredLayout`:
-  - Max width: `1600px`
-  - Horizontal padding: `px-8` (mobile), `lg:px-20` (desktop)
-  - Top spacing: `pt-[40px]` / `lg:pt-[60px]`
-  - Bottom spacing: `pb-[160px]` / `lg:pb-[220px]`
+  - max width `1440px`
+  - horizontal spacing: `px-10` (mobile), `lg:px-24` (desktop)
+  - top spacing: `pt-[40px]`, `lg:pt-[60px]`
+  - bottom spacing: `pb-[160px]`, `lg:pb-[220px]`
 - `SplitLayout`:
   - 12-column desktop grid
-  - Ratios: `5:7`, `7:5`, `6:6`
-  - Gap: `gap-12` / `lg:gap-24`
-  - Preserves same max width and horizontal rhythm as `FullCenteredLayout`
+  - ratios: `5:7`, `7:5`, `6:6`
+  - horizontal spacing aligned with `FullCenteredLayout`
+  - gap rhythm: `gap-12`, `lg:gap-24`
 
-## Icons and Motion
+## Icon and motion behavior
 
-- Motion exports:
-  - `motion` (from `motion/react`)
-  - `AnimatePresence` (from `motion/react`)
-- `SafeIcon` resolution order:
-  1. Custom inline SVG icon map
+- Motion aliases:
+  - `motion` from `motion/react`
+  - `AnimatePresence` from `motion/react`
+- `SafeIcon` fallback order:
+  1. custom icon map
   2. `lucide-react` icon by name
-  3. Neutral fallback square if icon is missing
+  3. neutral fallback placeholder
 
-## Change Rules (Mandatory)
+## Mandatory change constraints
 
-1. Do not introduce ad-hoc colors if an equivalent token already exists.
-2. Reuse UI-kit primitives before creating new local visual patterns.
-3. Keep spacing aligned to current layout rhythm; do not break paddings/gaps used by layout components.
-4. Preserve responsive behavior (mobile and desktop) in header, footer, and layout wrappers.
-5. Prefer extending existing primitives/composed components instead of duplicating styles.
+1. Reuse existing UI-kit components before creating new local style blocks.
+2. Keep token usage consistent; do not add ad-hoc colors when equivalent tokens exist.
+3. Preserve layout grid, max widths, and spacing rhythm.
+4. Keep mobile + desktop behavior consistent when changing header/footer/layout.
+5. Any typography changes must map to this system or update this file in the same change.
