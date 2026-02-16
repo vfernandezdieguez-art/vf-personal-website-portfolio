@@ -184,7 +184,7 @@ export const GlobalHeader = ({ logoName, lang = "EN", onLangChange }: any) => {
             </button>
             
             <a 
-              href="mailto:viviana@example.com"
+              href="mailto:vfernandezdieguez@gmail.com"
               className="hidden sm:flex bg-[#0E4E68] text-white px-6 py-2.5 rounded-full text-[13px] font-normal hover:bg-[#1A8E9F] transition-all duration-500 shadow-lg shadow-[#0E4E68]/10 active:scale-95 items-center gap-2 group no-underline"
             >
               {t.talk}
@@ -232,7 +232,7 @@ export const GlobalHeader = ({ logoName, lang = "EN", onLangChange }: any) => {
               </div>
               <div className="mt-8">
                 <a 
-                  href="mailto:viviana@example.com"
+                  href="mailto:vfernandezdieguez@gmail.com"
                   className="bg-[#0E4E68] text-white w-full py-4 rounded-full text-[15px] font-normal flex items-center justify-center gap-3 no-underline shadow-xl shadow-[#0E4E68]/20"
                 >
                   {t.talk}
@@ -343,7 +343,7 @@ export const SlideFooter = ({ current, total, label, onPrev, onNext, onRestart, 
 };
 
 export const FullCenteredLayout = ({ children, className = "", centered = false }: any) => (
-  <section className={`flex-grow w-full flex flex-col ${centered ? 'justify-center' : 'items-start'} pt-[40px] lg:pt-[60px] pb-[160px] lg:pb-[220px] px-10 lg:px-24 max-w-[1440px] mx-auto min-h-screen ${className}`}>
+  <section className={`flex-grow w-full flex flex-col ${centered ? 'justify-center' : 'items-start'} pt-[90px] lg:pt-[112px] pb-[120px] lg:pb-[160px] px-10 lg:px-24 max-w-[1440px] mx-auto min-h-screen ${className}`}>
     <div className={`w-full flex flex-col items-start ${centered ? 'mb-[2vh]' : ''}`}>{children}</div>
   </section>
 );
@@ -352,7 +352,7 @@ export const SplitLayout = ({ left, right, className = "", ratio = "5:7", center
   const leftSpan = ratio === "5:7" ? "lg:col-span-5" : ratio === "7:5" ? "lg:col-span-7" : "lg:col-span-6";
   const rightSpan = ratio === "5:7" ? "lg:col-span-7" : ratio === "7:5" ? "lg:col-span-5" : "lg:col-span-6";
   return (
-    <section className={`flex-grow w-full flex flex-col ${centered ? 'justify-center' : 'items-start'} pt-[40px] lg:pt-[60px] pb-[160px] lg:pb-[180px] px-10 lg:px-24 max-w-[1440px] mx-auto min-h-0 ${className}`}>
+    <section className={`flex-grow w-full flex flex-col ${centered ? 'justify-center' : 'items-start'} pt-[90px] lg:pt-[112px] pb-[120px] lg:pb-[160px] px-10 lg:px-24 max-w-[1440px] mx-auto min-h-0 ${className}`}>
       <div className={`grid grid-cols-1 lg:grid-cols-12 w-full gap-12 lg:gap-24 ${centered ? 'items-center' : 'items-start'} ${centered ? 'mb-[2vh]' : ''}`}>
         <div className={`col-span-1 ${leftSpan} flex flex-col`}>
           {left}

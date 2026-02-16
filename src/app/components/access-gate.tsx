@@ -82,7 +82,7 @@ export function AccessGate({ onAccessGranted }: AccessGateProps) {
 
         <div className="pt-8">
           <a
-            href="mailto:vivi@vffolio.com"
+            href="mailto:vfernandezdieguez@gmail.com"
             className="inline-flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase opacity-40 hover:opacity-100 transition-opacity no-underline"
           >
             <Mail className="w-3.5 h-3.5" /> Request Access

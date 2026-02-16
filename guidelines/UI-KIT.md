@@ -38,8 +38,8 @@ Any UI change must follow this reference.
 - `FullCenteredLayout`:
   - max width `1440px`
   - horizontal spacing: `px-10` (mobile), `lg:px-24` (desktop)
-  - top spacing: `pt-[40px]`, `lg:pt-[60px]`
-  - bottom spacing: `pb-[160px]`, `lg:pb-[220px]`
+  - top spacing: `pt-[90px]`, `lg:pt-[112px]`
+  - bottom spacing: `pb-[120px]`, `lg:pb-[160px]`
 - `SplitLayout`:
   - 12-column desktop grid
   - ratios: `5:7`, `7:5`, `6:6`

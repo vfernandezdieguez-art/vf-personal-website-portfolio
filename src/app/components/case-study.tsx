@@ -543,14 +543,14 @@ export function CaseStudy() {
       
       <GlobalHeader logoName="Viviana Fernández" lang={lang} onLangChange={setLang} />
 
-      <main className="pt-[60px] lg:pt-[75px] min-h-screen flex flex-col relative z-20">
-        <AnimatePresence mode="wait">
+      <main className="pt-[60px] lg:pt-[75px] min-h-screen flex flex-col relative z-20 overflow-x-hidden">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div 
             key={`${currentSlide}-${lang}`} 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.4 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="w-full flex-grow flex flex-col"
           >
             <SlideRenderer slide={slide} lang={lang} onSelectDoc={handleSelectDoc} onPrint={handlePrint} />
@@ -925,7 +925,7 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
               <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2 }} className="absolute top-[20%] left-0 w-[80%] aspect-[1.3] rounded-[48px] overflow-hidden shadow-2xl z-10 border border-white/40">
                 <img src={slide.collage[0]} className="w-full h-full object-cover" />
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 30, y: -20 }} whileInView={{ opacity: 1, x: 0, y: 0 }} transition={{ duration: 1, delay: 0.3 }} className="absolute top-[5%] right-[-5%] w-[45%] aspect-[0.75] rounded-[40px] overflow-hidden shadow-2xl z-20 border border-white/60">
+              <motion.div initial={{ opacity: 0, x: 10, y: -10 }} whileInView={{ opacity: 1, x: 0, y: 0 }} transition={{ duration: 1.2, delay: 0.3, ease: [0.22, 1, 0.36, 1] }} className="absolute top-[5%] right-[-5%] w-[45%] aspect-[0.75] rounded-[40px] overflow-hidden shadow-2xl z-20 border border-white/60">
                 <img src={slide.collage[1]} className="w-full h-full object-cover" />
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="absolute bottom-[-2%] right-[-8%] w-[40%] lg:w-[45%] bg-[#D8614E] p-7 lg:p-10 rounded-[50px] shadow-2xl z-30 text-white">
@@ -945,30 +945,32 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
 
   if (id === 'toolkit') {
     return (
-      <FullCenteredLayout centered={true} className="!pt-[4vh] lg:!pt-[6vh] !pb-[220px]">
-        <header className="mb-6 lg:mb-10 w-full"><SectionHeader category={slide.category} title={slide.title} description={slide.description} /></header>
-        <div className="mt-6 lg:mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-14 w-full max-w-[1100px] mx-auto items-start px-6 lg:px-0">
+      <FullCenteredLayout centered={false} className="!pt-12 lg:!pt-16 !pb-32">
+        <header className="mb-2 lg:mb-4 w-full"><SectionHeader category={slide.category} title={slide.title} description={slide.description} /></header>
+        <div className="mt-4 lg:mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-12 w-full max-w-[1160px] mx-auto items-start px-6 lg:px-0">
            {slide.artifacts?.map((art: any, i: number) => (
              <div key={art.id} onClick={() => onSelectDoc(art)} className="group cursor-zoom-in flex flex-col items-center text-center lg:text-left lg:items-start">
-                <div className="relative aspect-[4/3] w-full max-w-[320px] rounded-[32px] lg:rounded-[40px] overflow-hidden bg-[#F3F1EA] border border-[#0E4E68]/5 mb-6 shadow-sm hover:shadow-2xl transition-all duration-700 flex items-center justify-center">
+                <div className="relative aspect-[16/10] w-full max-w-[310px] rounded-[24px] lg:rounded-[32px] overflow-hidden bg-[#F3F1EA] border border-[#0E4E68]/5 mb-5 shadow-sm hover:shadow-2xl transition-all duration-700 flex items-center justify-center">
                    <img src={art.image} className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105" alt={art.title} />
                 </div>
-                <div className="space-y-2.5 px-2 max-w-[320px]">
-                   <CardLabel className="text-[#1A8E9F] uppercase">{art.tag}</CardLabel>
-                   <h4 className={`${Typography.title} text-[20px] lg:text-[24px] text-[#0E4E68] leading-tight tracking-tight group-hover:text-[#1A8E9F] transition-colors`}>{art.title}</h4>
-                   <CardBody className="text-[12.5px] lg:text-[13.5px] leading-relaxed text-[#0E4E68]/60">{art.text}</CardBody>
+                <div className="space-y-2 px-2 max-w-[310px]">
+                   <CardLabel className="text-[#1A8E9F] uppercase text-[10px] tracking-[0.2em]">{art.tag}</CardLabel>
+                   <h4 className={`${Typography.title} text-[19px] lg:text-[22px] text-[#0E4E68] leading-tight tracking-tight group-hover:text-[#1A8E9F] transition-colors`}>{art.title}</h4>
+                   <CardBody className="text-[12.5px] lg:text-[13.5px] leading-relaxed text-[#0E4E68]/60 font-normal">{art.text}</CardBody>
                 </div>
              </div>
            ))}
         </div>
+        {/* Espaciador específico para evitar overlap con la barra de navegación inferior solo en esta slide */}
+        <div className="h-[120px] lg:h-[180px] w-full pointer-events-none" />
       </FullCenteredLayout>
     );
   }
 
   if (id === 'governance') {
     return (
-      <FullCenteredLayout centered={true} className="!justify-start !pt-0 relative !pb-[220px]">
-        <div className="w-full flex flex-col lg:flex-row items-start gap-12 lg:gap-20 mt-[10vh] lg:mt-[14vh]">
+      <FullCenteredLayout centered={true} className="!justify-start relative !pb-[220px]">
+        <div className="w-full flex flex-col lg:flex-row items-start gap-12 lg:gap-20">
           <div className="lg:w-2/5 space-y-10">
             <div className="space-y-4">
               <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[10px] text-[#1A8E9F] font-medium tracking-[0.2em]">{slide.category}</CardLabel></div>
@@ -1004,8 +1006,8 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
 
   if (id === 'impact') {
     return (
-      <FullCenteredLayout centered={true} className="!justify-start !pt-0 py-0 !pb-[220px]">
-        <div className="w-full mt-[8vh] lg:mt-[12vh]">
+      <FullCenteredLayout centered={true} className="!justify-start py-0 !pb-[220px]">
+        <div className="w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             <div className="col-span-1 lg:col-span-5 space-y-12">
               <div className="space-y-4">
@@ -1017,7 +1019,7 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
               <div className="flex flex-col gap-6 border-l border-[#0E4E68]/10 pl-8 lg:pl-10 pt-4">
                 <div className="space-y-8 lg:space-y-10">
                   {slide.stats?.map((s: any, i: number) => (
-                    <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: i * 0.15 }} className="group cursor-default">
+                    <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }} className="group cursor-default">
                       <span className={`${Typography.title} text-[48px] lg:text-[60px] text-[#D8614E] leading-[0.9] tracking-tighter block mb-1 group-hover:text-[#1A8E9F] transition-colors`}>{s.value}</span>
                       <div className="space-y-0.5">
                         <CardLabel>{s.label}</CardLabel>
@@ -1056,8 +1058,8 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
 
   if (id === 'impact-practice') {
     return (
-      <FullCenteredLayout centered={true} className="!justify-start !pt-0 relative !pb-[220px]">
-        <div className="w-full flex flex-col lg:flex-row items-start gap-12 lg:gap-20 mt-[12vh] lg:mt-[16vh]">
+      <FullCenteredLayout centered={true} className="!justify-start relative !pb-[220px]">
+        <div className="w-full flex flex-col lg:flex-row items-start gap-12 lg:gap-20">
           <div className="lg:w-2/5 space-y-10">
             <div className="space-y-4">
               <div className="inline-block bg-[#1A8E9F]/10 px-4 py-1.5 rounded-full border border-[#1A8E9F]/20"><CardLabel className="text-[10px] text-[#1A8E9F] font-medium tracking-[0.2em]">{slide.category}</CardLabel></div>
@@ -1116,9 +1118,9 @@ function SlideRenderer({ slide, lang, onSelectDoc, onPrint }: any) {
                   <SafeIcon icon={lesson.icon} size={28} className="text-[#D8614E] relative z-20" />
                 </div>
               </div>
-              <div className="space-y-4">
-                <h4 className={`${Typography.title} text-[24px] lg:text-[32px] text-[#0E4E68] tracking-tighter group-hover:text-[#1A8E9F] transition-colors leading-tight`}>{lesson.title}</h4>
-                <p className={`${Typography.body} text-[15px] lg:text-[17px] leading-relaxed text-[#2F3B40] max-w-[300px] font-normal`}>{lesson.text}</p>
+              <div className="space-y-4 flex flex-col items-center">
+                <h4 className={`${Typography.title} text-[24px] lg:text-[32px] text-[#0E4E68] tracking-tighter group-hover:text-[#1A8E9F] transition-colors leading-tight min-h-[1.5em] lg:min-h-[2.2em] flex items-center justify-center`}>{lesson.title}</h4>
+                <p className={`${Typography.body} text-[15px] lg:text-[17px] leading-relaxed text-[#2F3B40] max-w-[300px] font-normal opacity-80`}>{lesson.text}</p>
               </div>
             </motion.div>
           ))}
